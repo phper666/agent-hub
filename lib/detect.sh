@@ -1,47 +1,48 @@
 #!/usr/bin/env bash
 # ============================================================
-#  平台检测模块
+#  平台检测模块（兼容 Bash 3.x+）
 # ============================================================
 
-# 平台元数据（关联数组，O(1) 查找）
-declare -A PLATFORM_GLOBAL_PATH
-declare -A PLATFORM_PROJECT_PATH
-
-# Reasonix
-PLATFORM_GLOBAL_PATH[reasonix]="$HOME/Library/Application Support/reasonix/skills"
-PLATFORM_PROJECT_PATH[reasonix]=".reasonix/skills"
-
-# Qoder
-PLATFORM_GLOBAL_PATH[qoder]="$HOME/.qoder/skills"
-PLATFORM_PROJECT_PATH[qoder]=".qoder/skills"
-
-# Claude
-PLATFORM_GLOBAL_PATH[claude]="$HOME/.claude/skills"
-PLATFORM_PROJECT_PATH[claude]=".claude/skills"
-
-# Cursor
-PLATFORM_GLOBAL_PATH[cursor]="$HOME/.cursor/skills"
-PLATFORM_PROJECT_PATH[cursor]=".cursor/skills"
-
-# WorkBuddy
-PLATFORM_GLOBAL_PATH[workbuddy]="$HOME/.workbuddy/skills"
-PLATFORM_PROJECT_PATH[workbuddy]=".workbuddy/skills"
-
-# Codex
-PLATFORM_GLOBAL_PATH[codex]="$HOME/.codex/skills"
-PLATFORM_PROJECT_PATH[codex]=".codex/skills"
-
-# Gemini
-PLATFORM_GLOBAL_PATH[gemini]="$HOME/.gemini/skills"
-PLATFORM_PROJECT_PATH[gemini]=".gemini/skills"
-
 # 所有已知平台列表
-KNOWN_PLATFORMS=(reasonix qoder claude cursor workbuddy codex gemini)
+KNOWN_PLATFORMS="reasonix qoder claude cursor workbuddy codex gemini opencode"
+
+# 获取平台的全局安装路径
+get_platform_global_path() {
+  local name="$1"
+  case "$name" in
+    reasonix)  echo "$HOME/Library/Application Support/reasonix/skills" ;;
+    qoder)     echo "$HOME/.qoder/skills" ;;
+    claude)    echo "$HOME/.claude/skills" ;;
+    cursor)    echo "$HOME/.cursor/skills" ;;
+    workbuddy) echo "$HOME/.workbuddy/skills" ;;
+    codex)     echo "$HOME/.codex/skills" ;;
+    gemini)    echo "$HOME/.gemini/skills" ;;
+    opencode)  echo "$HOME/.config/opencode/skills" ;;
+    *)         echo "" ;;
+  esac
+}
+
+# 获取平台的项目安装路径
+get_platform_project_path() {
+  local name="$1"
+  case "$name" in
+    reasonix)  echo ".reasonix/skills" ;;
+    qoder)     echo ".qoder/skills" ;;
+    claude)    echo ".claude/skills" ;;
+    cursor)    echo ".cursor/skills" ;;
+    workbuddy) echo ".workbuddy/skills" ;;
+    codex)     echo ".codex/skills" ;;
+    gemini)    echo ".gemini/skills" ;;
+    opencode)  echo ".opencode/skills" ;;
+    *)         echo "" ;;
+  esac
+}
 
 # 检测单个平台是否安装
 detect_platform() {
   local name="$1"
-  local global_path="${PLATFORM_GLOBAL_PATH[$name]}"
+  local global_path
+  global_path="$(get_platform_global_path "$name")"
 
   if [ -n "$global_path" ]; then
     # 目录检测：检查全局技能目录本身或其父目录是否存在
@@ -61,7 +62,7 @@ cmd_detect() {
   local found=0
   local detected_list=""
 
-  for name in "${KNOWN_PLATFORMS[@]}"; do
+  for name in $KNOWN_PLATFORMS; do
     if detect_platform "$name"; then
       ok "$name"
       found=$((found + 1))
@@ -92,14 +93,4 @@ get_detected_platforms() {
   else
     echo ""
   fi
-}
-
-# 获取平台的全局安装路径 (O(1))
-get_platform_global_path() {
-  echo "${PLATFORM_GLOBAL_PATH[$1]}"
-}
-
-# 获取平台的项目安装路径 (O(1))
-get_platform_project_path() {
-  echo "${PLATFORM_PROJECT_PATH[$1]}"
 }

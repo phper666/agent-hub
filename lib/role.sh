@@ -241,8 +241,22 @@ cmd_import() {
 
 # 导出角色
 cmd_export() {
-  local name="$1"
-  local output="${2:-}"
+  local name=""
+  local output=""
+
+  # 解析参数
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --output|-o)
+        output="$2"
+        shift 2
+        ;;
+      *)
+        name="$1"
+        shift
+        ;;
+    esac
+  done
 
   if [ -z "$name" ]; then
     fail "用法: agent-hub export <role> [--output <file>]"

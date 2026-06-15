@@ -2,7 +2,7 @@
 
 **像 npm 管理 Node.js 包一样，管理 AI Agent 的角色和技能。**
 
-Agent Hub 是一个 AI 角色包管理器，让你一次定义角色，即可安装到所有主流 AI Agent 平台（Reasonix、Qoder、Claude、Cursor、WorkBuddy、Codex、Gemini），免去手动复制和格式适配的烦恼。
+Agent Hub 是一个 AI 角色包管理器，让你一次定义角色，即可安装到所有主流 AI Agent 平台（Reasonix、Qoder、Claude、Cursor、WorkBuddy、Codex、Gemini、openCode），免去手动复制和格式适配的烦恼。
 
 ---
 
@@ -319,6 +319,7 @@ QA 用 TDD 和 verification 进行测试
 | **WorkBuddy** | 目录检测 | `~/.workbuddy/skills` | `.workbuddy/skills` |
 | **Codex** | 目录检测 | `~/.codex/skills` | `.codex/skills` |
 | **Gemini** | 目录检测 | `~/.gemini/skills` | `.gemini/skills` |
+| **openCode** | 目录检测 | `~/.config/opencode/skills` | `.opencode/skills` |
 
 ### 操作系统
 
