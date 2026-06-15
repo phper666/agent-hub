@@ -1,23 +1,34 @@
 #!/usr/bin/env bash
 # ============================================================
-#  流水线模块
+#  流水线模块（兼容 Bash 3.x+）
 # ============================================================
 
-# 角色产出文件 (可通过 role.yaml 覆盖)
-declare -A ROLE_OUTPUTS
-ROLE_OUTPUTS[pm]="docs/current/requirements/PRD.md"
-ROLE_OUTPUTS[designer]="docs/current/design/component-spec.md"
-ROLE_OUTPUTS[frontend]="src/frontend/"
-ROLE_OUTPUTS[backend]="src/backend/"
-ROLE_OUTPUTS[qa]="tests/"
+# 获取角色产出文件
+get_role_output() {
+  local role="$1"
+  case "$role" in
+    pm)       echo "docs/current/requirements/PRD.md" ;;
+    designer) echo "docs/current/design/component-spec.md" ;;
+    frontend) echo "src/frontend/" ;;
+    backend)  echo "src/backend/" ;;
+    qa)       echo "tests/" ;;
+    *)        echo "" ;;
+  esac
+}
 
-# 角色 emoji (可通过 role.yaml 覆盖)
-declare -A ROLE_EMOJI
-ROLE_EMOJI[pm]="🤖"
-ROLE_EMOJI[designer]="🎨"
-ROLE_EMOJI[frontend]="💻"
-ROLE_EMOJI[backend]="⚙️"
-ROLE_EMOJI[qa]="🧪"
+# 获取角色 emoji
+get_role_emoji() {
+  local role="$1"
+  case "$role" in
+    pm)       echo "🤖" ;;
+    designer) echo "🎨" ;;
+    frontend) echo "💻" ;;
+    backend)  echo "⚙️" ;;
+    qa)       echo "🧪" ;;
+    router)   echo "🔀" ;;
+    *)        echo "❓" ;;
+  esac
+}
 
 # 获取角色状态
 get_role_status() {
@@ -76,10 +87,12 @@ cmd_pipeline_status() {
     [ -d "$role_dir" ] || continue
     local role
     role="$(basename "$role_dir")"
-    local emoji="${ROLE_EMOJI[$role]:-❓}"
+    local emoji
+    emoji="$(get_role_emoji "$role")"
     local status
     status="$(get_role_status "$role")"
-    local output="${ROLE_OUTPUTS[$role]:-}"
+    local output
+    output="$(get_role_output "$role")"
 
     # 检查产出文件是否存在
     if [ -n "$output" ] && [ -e "$output" ]; then

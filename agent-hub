@@ -2,8 +2,6 @@
 # ============================================================
 #  agent-hub — AI 角色包管理器
 #
-#  版本: 2.1.0
-#
 #  用法：
 #    agent-hub init                             初始化项目
 #    agent-hub detect                           检测已安装的 Agent
@@ -21,21 +19,15 @@
 
 set -e
 
-# 颜色
-RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
-BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
-
-info()  { echo -e "${BLUE}ℹ️  $1${NC}"; }
-ok()    { echo -e "${GREEN}✅ $1${NC}"; }
-warn()  { echo -e "${YELLOW}⚠️  $1${NC}"; }
-fail()  { echo -e "${RED}❌ $1${NC}"; exit 1; }
-
-# 版本
-VERSION="2.1.0"
-
-# 路径
+# 路径（必须在加载其他模块之前定义）
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 AGENT_HUB_DIR="$SCRIPT_DIR"
+
+# 加载公共函数库
+source "$SCRIPT_DIR/lib/common.sh"
+
+# 版本（从 VERSION 文件读取）
+VERSION="$(get_version "$AGENT_HUB_DIR")"
 
 # 加载模块
 source "$SCRIPT_DIR/lib/detect.sh"
