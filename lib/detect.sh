@@ -3,43 +3,52 @@
 #  平台检测模块
 # ============================================================
 
-# 平台定义：名称|检测方式|全局安装路径|项目安装路径
-PLATFORM_DEFS=(
-  "reasonix|dir|$HOME/Library/Application Support/reasonix/skills|.reasonix/skills"
-  "qoder|dir|$HOME/.qoder/skills|.qoder/skills"
-  "claude|dir|$HOME/.claude/skills|.claude/skills"
-  "cursor|dir|$HOME/.cursor/skills|.cursor/skills"
-  "workbuddy|dir|$HOME/.workbuddy/skills|.workbuddy/skills"
-  "codex|dir|$HOME/.codex/skills|.codex/skills"
-  "gemini|dir|$HOME/.gemini/skills|.gemini/skills"
-)
+# 平台元数据（关联数组，O(1) 查找）
+declare -A PLATFORM_GLOBAL_PATH
+declare -A PLATFORM_PROJECT_PATH
 
-# 解析路径中的转义空格（兼容带空格的路径如 ~/Library/Application Support/...）
-_resolve_path() {
-  echo "${1//\\ / }"
-}
+# Reasonix
+PLATFORM_GLOBAL_PATH[reasonix]="$HOME/Library/Application Support/reasonix/skills"
+PLATFORM_PROJECT_PATH[reasonix]=".reasonix/skills"
+
+# Qoder
+PLATFORM_GLOBAL_PATH[qoder]="$HOME/.qoder/skills"
+PLATFORM_PROJECT_PATH[qoder]=".qoder/skills"
+
+# Claude
+PLATFORM_GLOBAL_PATH[claude]="$HOME/.claude/skills"
+PLATFORM_PROJECT_PATH[claude]=".claude/skills"
+
+# Cursor
+PLATFORM_GLOBAL_PATH[cursor]="$HOME/.cursor/skills"
+PLATFORM_PROJECT_PATH[cursor]=".cursor/skills"
+
+# WorkBuddy
+PLATFORM_GLOBAL_PATH[workbuddy]="$HOME/.workbuddy/skills"
+PLATFORM_PROJECT_PATH[workbuddy]=".workbuddy/skills"
+
+# Codex
+PLATFORM_GLOBAL_PATH[codex]="$HOME/.codex/skills"
+PLATFORM_PROJECT_PATH[codex]=".codex/skills"
+
+# Gemini
+PLATFORM_GLOBAL_PATH[gemini]="$HOME/.gemini/skills"
+PLATFORM_PROJECT_PATH[gemini]=".gemini/skills"
+
+# 所有已知平台列表
+KNOWN_PLATFORMS=(reasonix qoder claude cursor workbuddy codex gemini)
 
 # 检测单个平台是否安装
 detect_platform() {
   local name="$1"
-  local check_type="$2"
-  local raw_path="$3"
+  local global_path="${PLATFORM_GLOBAL_PATH[$name]}"
 
-  case "$check_type" in
-    dir)
-      local global_path
-      global_path="$(_resolve_path "$raw_path")"
-      # 检查全局技能目录本身或其父目录是否存在
-      if [ -d "$global_path" ] || [ -d "$(dirname "$global_path")" ]; then
-        return 0
-      fi
-      ;;
-    cmd)
-      if command -v "$name" &>/dev/null; then
-        return 0
-      fi
-      ;;
-  esac
+  if [ -n "$global_path" ]; then
+    # 目录检测：检查全局技能目录本身或其父目录是否存在
+    if [ -d "$global_path" ] || [ -d "$(dirname "$global_path")" ]; then
+      return 0
+    fi
+  fi
   return 1
 }
 
@@ -52,10 +61,8 @@ cmd_detect() {
   local found=0
   local detected_list=""
 
-  for def in "${PLATFORM_DEFS[@]}"; do
-    IFS='|' read -r name check_type global_path project_path <<< "$def"
-
-    if detect_platform "$name" "$check_type" "$global_path"; then
+  for name in "${KNOWN_PLATFORMS[@]}"; do
+    if detect_platform "$name"; then
       ok "$name"
       found=$((found + 1))
       detected_list="${detected_list:+$detected_list,}$name"
@@ -87,28 +94,12 @@ get_detected_platforms() {
   fi
 }
 
-# 获取平台的全局安装路径
+# 获取平台的全局安装路径 (O(1))
 get_platform_global_path() {
-  local target="$1"
-  for def in "${PLATFORM_DEFS[@]}"; do
-    IFS='|' read -r name check_type global_path project_path <<< "$def"
-    if [ "$name" = "$target" ]; then
-      echo "$global_path"
-      return 0
-    fi
-  done
-  return 1
+  echo "${PLATFORM_GLOBAL_PATH[$1]}"
 }
 
-# 获取平台的项目安装路径
+# 获取平台的项目安装路径 (O(1))
 get_platform_project_path() {
-  local target="$1"
-  for def in "${PLATFORM_DEFS[@]}"; do
-    IFS='|' read -r name check_type global_path project_path <<< "$def"
-    if [ "$name" = "$target" ]; then
-      echo "$project_path"
-      return 0
-    fi
-  done
-  return 1
+  echo "${PLATFORM_PROJECT_PATH[$1]}"
 }

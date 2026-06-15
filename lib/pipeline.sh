@@ -3,26 +3,21 @@
 #  流水线模块
 # ============================================================
 
-# 角色依赖关系（格式: role:dep1,dep2）
-ROLE_DEPS_PM=""
-ROLE_DEPS_DESIGNER="pm"
-ROLE_DEPS_FRONTEND="designer"
-ROLE_DEPS_BACKEND="designer"
-ROLE_DEPS_QA="frontend backend"
+# 角色产出文件 (可通过 role.yaml 覆盖)
+declare -A ROLE_OUTPUTS
+ROLE_OUTPUTS[pm]="docs/current/requirements/PRD.md"
+ROLE_OUTPUTS[designer]="docs/current/design/component-spec.md"
+ROLE_OUTPUTS[frontend]="src/frontend/"
+ROLE_OUTPUTS[backend]="src/backend/"
+ROLE_OUTPUTS[qa]="tests/"
 
-# 角色产出文件
-ROLE_OUTPUTS_PM="docs/current/requirements/PRD.md"
-ROLE_OUTPUTS_DESIGNER="docs/current/design/component-spec.md"
-ROLE_OUTPUTS_FRONTEND="src/frontend/"
-ROLE_OUTPUTS_BACKEND="src/backend/"
-ROLE_OUTPUTS_QA="tests/"
-
-# 角色 emoji
-ROLE_EMOJI_PM="🤖"
-ROLE_EMOJI_DESIGNER="🎨"
-ROLE_EMOJI_FRONTEND="💻"
-ROLE_EMOJI_BACKEND="⚙️"
-ROLE_EMOJI_QA="🧪"
+# 角色 emoji (可通过 role.yaml 覆盖)
+declare -A ROLE_EMOJI
+ROLE_EMOJI[pm]="🤖"
+ROLE_EMOJI[designer]="🎨"
+ROLE_EMOJI[frontend]="💻"
+ROLE_EMOJI[backend]="⚙️"
+ROLE_EMOJI[qa]="🧪"
 
 # 获取角色状态
 get_role_status() {
@@ -51,31 +46,50 @@ get_role_status() {
   fi
 }
 
+# 获取角色显示名称
+get_role_display_name() {
+  local name="$1"
+  # 从 SKILL.md frontmatter 提取，fallback 用目录名
+  local skill_file="roles/$name/SKILL.md"
+  if [ -f "$skill_file" ]; then
+    local extracted
+    extracted="$(grep "^description:" "$skill_file" 2>/dev/null | head -1 | sed 's/^description:[[:space:]]*//' | cut -d'.' -f1)"
+    if [ -n "$extracted" ]; then
+      echo "$extracted"
+      return
+    fi
+  fi
+  echo "$name"
+}
+
 # 管线状态
 cmd_pipeline_status() {
   echo ""
   echo -e "${CYAN}📊 项目流水线状态${NC}"
   echo ""
 
-  printf "  %-5s %-12s %-12s %-30s\n" "" "角色" "状态" "产出"
-  printf "  %-5s %-12s %-12s %-30s\n" "───" "────────────" "────────────" "──────────────────────────────"
+  printf "  %-5s %-15s %-12s %-30s\n" "" "角色" "状态" "产出"
+  printf "  %-5s %-15s %-12s %-30s\n" "───" "───────────────" "────────────" "──────────────────────────────"
 
-  for role in pm designer frontend backend qa; do
-    local upper_role
-    upper_role="$(echo "$role" | tr '[:lower:]' '[:upper:]' | tr '-' '_')"
-    local emoji_var="ROLE_EMOJI_${upper_role}"
-    local emoji="${!emoji_var:-❓}"
+  # 动态发现角色
+  for role_dir in roles/*/; do
+    [ -d "$role_dir" ] || continue
+    local role
+    role="$(basename "$role_dir")"
+    local emoji="${ROLE_EMOJI[$role]:-❓}"
     local status
     status="$(get_role_status "$role")"
-    local output_var="ROLE_OUTPUTS_${upper_role}"
-    local output="${!output_var:-}"
+    local output="${ROLE_OUTPUTS[$role]:-}"
 
     # 检查产出文件是否存在
     if [ -n "$output" ] && [ -e "$output" ]; then
       output="$output ✓"
     fi
 
-    printf "  %-5s %-12s %-12s %-30s\n" "$emoji" "$role" "$status" "$output"
+    local display_name
+    display_name="$(get_role_display_name "$role")"
+
+    printf "  %-5s %-15s %-12s %-30s\n" "$emoji" "$role" "$status" "$output"
   done
 
   echo ""
@@ -87,17 +101,22 @@ cmd_pipeline_reset() {
 
   mkdir -p "$(dirname "$status_file")"
 
-  cat > "$status_file" << 'EOF'
-# 项目状态
-
-| 角色 | 状态 | 更新时间 |
-|------|------|----------|
-| PM | ⏳ 待开始 | - |
-| Designer | ⏳ 待开始 | - |
-| Frontend | ⏳ 待开始 | - |
-| Backend | ⏳ 待开始 | - |
-| QA | ⏳ 待开始 | - |
-EOF
+  # 动态生成表头
+  {
+    echo "# 项目状态"
+    echo ""
+    echo "| 角色 | 状态 | 更新时间 |"
+    echo "|------|------|----------|"
+    for role_dir in roles/*/; do
+      [ -d "$role_dir" ] || continue
+      local role
+      role="$(basename "$role_dir")"
+      # 首字母大写
+      local capitalized
+      capitalized="$(echo "$role" | sed 's/./\U&/')"
+      echo "| $capitalized | ⏳ 待开始 | - |"
+    done
+  } > "$status_file"
 
   ok "状态已重置"
 }

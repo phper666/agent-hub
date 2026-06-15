@@ -403,7 +403,8 @@ create_role_files() {
   echo "  2. agent-hub install all --global  安装所有角色"
 }
 
-# 创建单个角色create_role() {
+# 创建单个角色
+create_role() {
   local name="$1"
   local title="$2"
   local description="$3"
@@ -416,16 +417,16 @@ create_role_files() {
 
   mkdir -p "$role_dir"
 
-  # 创建 SKILL.md
+  # 创建 SKILL.md（模式 A：角色框架 + 专家知识分离）
   cat > "$role_dir/SKILL.md" << EOF
 ---
 name: $name
-description: $title. $description.
+description: $description.
 ---
 
-# Role: $title
+# 角色框架: $title
 
-You are a $title. $description.
+你是${title}的**工程框架**，负责协调规则加载、输入/输出管理和流水线状态更新。
 
 ## 必备工具
 - **markitdown**: 读取 PDF/Office/图片文档，提取文本内容。安装：\`pip install markitdown\`
@@ -434,7 +435,9 @@ You are a $title. $description.
 1. \`.shared/rules/git-rules.md\` — Git 规范
 2. \`.shared/rules/quality-rules.md\` — 质量底线
 3. \`.shared/rules/security-rules.md\` — 安全底线
-4. 本文件（角色指令）
+4. 本文件（角色框架 — 工程流程协调）
+
+> 如需添加领域专家知识，创建 \`agents/agency/<name>-expert.md\` 并在此处引用。
 
 ## Input（你需要读取的文件）
 | 文件 | 来源角色 | 是否必须 |
@@ -447,23 +450,26 @@ You are a $title. $description.
 |------|-----------|:---:|
 | docs/current/status.md | 所有角色 | ✅（更新状态） |
 
-## Core Principles
+## Dependency Check（启动前必须检查）
+启动前必须读取 \`docs/current/status.md\`，确认上游角色已完成。
+
+## 工程原则
 - 专注于自己的职责范围
 - 与其他角色协作，不越界
 - 保持代码和文档的质量
 
-## Workflow
+## 工程流程
 
-### Step 1: Read Requirements
-Read PRD and user stories from \`docs/current/requirements/\`.
+### Step 1: 读取需求
+读取 PRD 和用户故事
 
-### Step 2: Execute Tasks
-Execute your specific tasks based on your role.
+### Step 2: 执行任务
+根据角色职责执行具体任务
 
-### Step 3: Update Status
-Update \`docs/current/status.md\`
+### Step 3: 更新状态
+更新 \`docs/current/status.md\`
 
-## What You Do NOT Do
+## 你不能做的事
 - 不做其他角色的工作
 - 不修改其他角色的产出物
 - 不跳过质量检查
@@ -473,7 +479,7 @@ EOF
   cat > "$role_dir/role.yaml" << EOF
 name: $name
 version: "1.0.0"
-description: $title. $description.
+description: $description.
 author: agent-hub
 tags:
   - $name
@@ -482,30 +488,4 @@ dependencies: []
 EOF
 
   echo "✅ 创建角色: $name"
-}
-
-# 显示帮助
-show_generate_help() {
-  echo ""
-  echo "用法: agent-hub generate <领域>"
-  echo ""
-  echo "根据领域自动生成角色配置"
-  echo ""
-  echo "可用领域:"
-  echo "  web          Web 开发（5 角色）"
-  echo "  mobile       移动端开发（5 角色）"
-  echo "  data         数据分析（4 角色）"
-  echo "  api          API 开发（4 角色）"
-  echo "  ml           机器学习（4 角色）"
-  echo "  devops       DevOps（4 角色）"
-  echo "  game         游戏开发（5 角色）"
-  echo "  blockchain   区块链（4 角色）"
-  echo "  ai           AI 应用（4 角色）"
-  echo "  ecommerce    电商（5 角色）"
-  echo ""
-  echo "示例:"
-  echo "  agent-hub generate web"
-  echo "  agent-hub generate mobile"
-  echo "  agent-hub generate data"
-  echo ""
 }

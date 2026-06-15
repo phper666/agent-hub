@@ -217,10 +217,11 @@ cmd_import() {
     name="$(basename "$role_dir")"
 
     if [ -f "$role_dir/SKILL.md" ]; then
-      mkdir -p "roles/$name/rules" "roles/$name/skills"
+      mkdir -p "roles/$name/rules" "roles/$name/skills" "roles/$name/agents"
       cp "$role_dir/SKILL.md" "roles/$name/SKILL.md"
       [ -d "$role_dir/rules" ] && cp -r "$role_dir/rules/"* "roles/$name/rules/" 2>/dev/null || true
       [ -d "$role_dir/skills" ] && cp -r "$role_dir/skills/"* "roles/$name/skills/" 2>/dev/null || true
+      [ -d "$role_dir/agents" ] && cp -r "$role_dir/agents/"* "roles/$name/agents/" 2>/dev/null || true
       ok "导入: $name"
       imported=$((imported + 1))
     fi
