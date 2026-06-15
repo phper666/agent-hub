@@ -1,0 +1,6 @@
+# Agent Hub
+.agent-hub-detected
+*.swp
+*.swo
+*~
+.DS_Store

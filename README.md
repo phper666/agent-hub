@@ -1,301 +1,311 @@
 # 🦞 Agent Hub — AI 角色包管理器
 
-**统一管理 AI Agent 角色（SKILL.md）的跨平台包管理工具。**
+**像 npm 管理 Node.js 包一样，管理 AI Agent 的角色和技能。**
 
-Agent Hub 帮助你在多个 AI Agent 平台之间统一管理角色定义文件，一次编写，随处安装。支持 Reasonix、Qoder、Claude、Cursor、WorkBuddy、Codex、Gemini 等主流平台。
-
----
-
-## ✨ 功能特性
-
-- 🔍 **自动检测** — 自动扫描本地已安装的 AI Agent 平台
-- 📦 **一键安装** — 将角色（SKILL.md）批量安装到任意平台
-- 🗑️ **快速卸载** — 从指定平台移除已安装的角色
-- 🔄 **角色更新** — 更新已安装角色到最新版本
-- 📥 **导入导出** — 从其他项目导入角色，或导出为 YAML 文件
-- 🧩 **共享规则** — 支持全局规则和技能的共享复用
-- 🔧 **依赖管理** — 自动安装 markitdown 等工具依赖
+一次定义角色，安装到所有主流 AI Agent 平台。支持 Reasonix、Qoder、Claude、Cursor、WorkBuddy、Codex、Gemini。
 
 ---
 
-## 📋 支持平台
+## 它是什么
 
-| 平台 | 全局安装路径 | 项目安装路径 |
-|------|-------------|-------------|
-| **Reasonix** | `~/Library/Application Support/reasonix/skills` | `.reasonix/skills` |
-| **Qoder** | `~/.qoder/skills` | `.qoder/skills` |
-| **Claude** | `~/.claude/skills` | `.claude/skills` |
-| **Cursor** | `~/.cursor/skills` | `.cursor/skills` |
-| **WorkBuddy** | `~/.workbuddy/skills` | `.workbuddy/skills` |
-| **Codex** | `~/.codex/skills` | `.codex/skills` |
-| **Gemini** | `~/.gemini/skills` | `.gemini/skills` |
+Agent Hub 解决的问题：你有多个 AI Agent 平台（Reasonix、Qoder、Claude 等），每个平台都有自己的角色/技能目录结构。如果你想让所有平台都有一个"产品经理"角色，你需要手动把 SKILL.md 复制到每个平台的目录里，格式还不一样。
+
+Agent Hub 帮你自动化这件事：
+
+```
+你定义角色（SKILL.md）
+    ↓
+agent-hub install pm --global
+    ↓
+自动写入所有已检测平台的正确目录
+    ↓
+打开任意 Agent，直接使用该角色
+```
 
 ---
 
-## 🚀 安装
+## 快速开始
 
-### 方式一：克隆仓库
+### 1. 克隆项目
 
 ```bash
-git clone <repo-url> agent-hub
+git clone https://github.com/your-username/agent-hub.git
 cd agent-hub
 chmod +x agent-hub
 ```
 
-### 方式二：添加到 PATH
+### 2. 添加到 PATH（可选）
 
 ```bash
-# 将 agent-hub 添加到全局命令
-sudo ln -s $(pwd)/agent-hub /usr/local/bin/agent-hub
+# 添加到 ~/.bashrc 或 ~/.zshrc
+export PATH="$PATH:/path/to/agent-hub"
+
+# 然后就可以在任意目录使用
+agent-hub help
 ```
 
-### 依赖安装
-
-```bash
-# 安装工具依赖（markitdown 等）
-./agent-hub deps install
-```
-
----
-
-## ⚡ 快速开始
-
-### 1. 初始化项目
-
-```bash
-agent-hub init
-```
-
-这会在当前目录创建完整的项目结构：
-
-```
-my-project/
-├── agent-hub.yaml        # 项目配置
-├── roles/                # 角色目录
-│   ├── pm/
-│   ├── designer/
-│   ├── frontend/
-│   ├── backend/
-│   └── qa/
-├── .shared/              # 共享规则和技能
-│   ├── rules/
-│   └── skills/
-├── templates/
-├── tests/
-└── docs/current/
-```
-
-### 2. 检测已安装的 Agent 平台
+### 3. 检测已安装的 Agent
 
 ```bash
 agent-hub detect
+
+# 输出：
+# ✅ reasonix
+# ✅ qoder
+# ✅ claude
+# ✅ cursor
+# ✅ workbuddy
+# ✅ codex
+# ✅ gemini
+# ✅ 检测到 7 个平台
 ```
 
-输出示例：
-```
-🔍 检测已安装的 Agent 平台
-
-  ✅ reasonix
-  ✅ claude
-  ✅ cursor
-  ✗ qoder (未安装)
-  ✗ workbuddy (未安装)
-  ✗ codex (未安装)
-  ✗ gemini (未安装)
-
-✅ 检测到 3 个平台: reasonix,claude,cursor
-ℹ️  检测结果已保存到 .agent-hub-detected
-```
-
-### 3. 安装角色
+### 4. 安装角色到项目
 
 ```bash
-# 安装单个角色到所有已检测平台
-agent-hub install frontend --global
+cd your-project/
 
-# 安装所有角色
+# 安装所有角色到当前项目
+agent-hub install all --project
+
+# 只安装 PM 角色到指定平台
+agent-hub install pm --project --to reasonix,claude
+
+# 全局安装（所有项目都能用）
 agent-hub install all --global
-
-# 安装到项目目录
-agent-hub install backend --project
 ```
 
-### 4. 查看角色列表
+### 5. 使用角色
 
-```bash
-agent-hub role list
+安装后，在对应的 Agent 里新建会话，输入角色关键词即可激活：
+
+```
+Reasonix / Qoder / Claude 中：
+  用户：切换到产品经理
+  Agent：已切换到产品经理角色，加载规则：git-rules, quality-rules
+  用户：帮我分析这个需求...
+  Agent：（以产品经理的身份和能力回答）
 ```
 
 ---
 
-## 📖 命令参考
+## 全部命令
 
 ### 初始化
 
 ```bash
-agent-hub init
+agent-hub init                    # 在当前目录创建角色目录结构
 ```
-
-初始化项目目录结构，创建配置文件 `agent-hub.yaml` 和默认角色模板。
 
 ### 平台检测
 
 ```bash
-agent-hub detect
+agent-hub detect                  # 检测本地已安装的 Agent 平台
 ```
-
-扫描本地系统，检测已安装的 AI Agent 平台。检测结果保存到 `.agent-hub-detected`。
 
 ### 角色管理
 
 ```bash
-# 列出所有角色
-agent-hub role list
-
-# 创建新角色
-agent-hub role create <name>
-
-# 编辑角色的 SKILL.md
-agent-hub role edit <name>
-
-# 查看角色详情
-agent-hub role info <name>
-
-# 删除角色
-agent-hub role delete <name>
+agent-hub role list               # 列出所有角色（显示名称、描述、状态）
+agent-hub role create <name>      # 创建角色模板（生成 SKILL.md 骨架）
+agent-hub role edit <name>        # 用编辑器打开角色的 SKILL.md
+agent-hub role delete <name>      # 删除角色
+agent-hub role info <name>        # 查看角色详情
 ```
 
 ### 安装 / 卸载 / 更新
 
 ```bash
-# 安装角色到全局目录（所有已检测平台）
-agent-hub install <role|all> --global
+# 项目级安装（只在当前项目生效）
+agent-hub install pm --project
+agent-hub install all --project
+agent-hub install pm --project --to reasonix,claude
 
-# 安装角色到项目目录
-agent-hub install <role|all> --project
+# 全局安装（所有项目都能用）
+agent-hub install pm --global
+agent-hub install all --global
 
-# 卸载角色
-agent-hub uninstall <role|all> --global
-agent-hub uninstall <role|all> --project
+# 卸载
+agent-hub uninstall pm --project
+agent-hub uninstall all --global
 
-# 更新角色（先卸载再重新安装）
-agent-hub update <role|all>
+# 更新（卸载 + 重装）
+agent-hub update pm --project
+agent-hub update all --global
 ```
-
-**安装模式说明：**
-- `--global` — 安装到平台的全局目录（如 `~/.claude/skills/<role>/`），所有项目可用
-- `--project` — 安装到当前项目目录（如 `.claude/skills/<role>/`），仅当前项目可用
 
 ### 导入 / 导出
 
 ```bash
 # 从其他项目导入角色
-agent-hub import <path>
+agent-hub import /path/to/skills-install-sh
 
-# 导出角色为 YAML 文件
-agent-hub export <role>
-agent-hub export <role> --output <file>
+# 导出单个角色
+agent-hub export pm
+agent-hub export pm --output pm.yaml
 ```
 
 ### 依赖管理
 
 ```bash
-# 安装所有依赖
-agent-hub deps install
-
-# 列出依赖
-agent-hub deps list
+agent-hub deps install            # 安装依赖（markitdown 等）
+agent-hub deps list               # 列出依赖
 ```
 
 ### 流水线状态
 
 ```bash
-# 查看项目状态
-agent-hub pipeline status
-
-# 重置状态
-agent-hub pipeline reset
+agent-hub pipeline status         # 查看各角色的完成状态
+agent-hub pipeline reset          # 重置状态
 ```
 
-### 其他
+### 升级
 
 ```bash
-# 查看版本
-agent-hub version
-
-# 查看帮助
-agent-hub help
+agent-hub upgrade                 # 检查并升级 agent-hub 自身
 ```
 
 ---
 
-## 🏗️ 工作原理
+## 内置角色
 
-Agent Hub 的核心工作流程：
+| 角色 | Emoji | 描述 |
+|------|-------|------|
+| **pm** | 🤖 | 产品经理 — 需求分析、PRD、用户故事 |
+| **designer** | 🎨 | UI/UX 设计师 — 界面设计、原型、组件规范 |
+| **frontend** | 💻 | 前端工程师 — React/Vue/Angular 组件、页面、状态管理 |
+| **backend** | ⚙️ | 后端工程师 — API、数据库、服务端、认证 |
+| **qa** | 🧪 | 测试工程师 — 测试计划、集成测试、E2E 测试、质量保障 |
+| **router** | 🔀 | 角色路由 — 自动检测当前任务应该切换到哪个角色 |
 
-```
-roles/<name>/SKILL.md    ──→    <platform>/skills/<name>/SKILL.md
-        ↑                                    ↑
-   源角色定义                    Agent 平台读取角色配置
-```
-
-1. **角色（Role）** 是以 `SKILL.md` 为核心的角色定义文件，存放在 `roles/` 目录下
-2. **安装** 时，Agent Hub 将 `SKILL.md` 以及相关的 rules/、skills/ 文件复制到目标平台的 skills 目录
-3. **平台检测** 通过扫描各平台的标准安装路径来判断是否已安装
-4. 每个角色可包含：
-   - `SKILL.md` — 角色定义主文件（必需）
-   - `rules/` — 角色专属规则（可选）
-   - `skills/` — 角色专属技能（可选）
-5. 共享的全局规则和技能放在 `.shared/` 目录，安装时一并复制
+每个角色包含：
+- `SKILL.md` — 角色人设和工作流程
+- `rules/` — 角色专属规则
+- `agents/` — 子角色定义
+- `.shared/rules/` — 全局共享规则（安装时自动注入）
 
 ---
 
-## 📁 项目结构
+## 共享规则
+
+所有角色安装时自动注入以下全局规则：
+
+| 规则文件 | 内容 |
+|---------|------|
+| `git-rules.md` | Git 提交规范、分支管理、PR 标准 |
+| `quality-rules.md` | 代码质量标准、测试覆盖率、代码审查 |
+| `security-rules.md` | 安全编码规范、输入校验、认证授权 |
+| `output-rules.md` | 输出格式规范、简洁原则、状态标记 |
+
+---
+
+## 创建自定义角色
+
+```bash
+# 创建角色模板
+agent-hub role create my-role
+
+# 编辑 SKILL.md
+agent-hub role edit my-role
+```
+
+生成的 `roles/my-role/SKILL.md`：
+
+```yaml
+---
+name: my-role
+description: TODO: 一句话描述这个角色的职责。
+---
+
+# Role: my-role
+
+你是一个 TODO（填写角色名）。
+
+## Core Principles
+- TODO: 列出核心原则
+
+## Workflow
+
+### Step 1: TODO
+TODO: 描述工作流程
+
+## 你不能做的事
+- TODO: 列出限制
+```
+
+---
+
+## 项目结构
 
 ```
 agent-hub/
-├── agent-hub              # 主入口脚本
+├── agent-hub                     # CLI 入口（Bash）
+├── agent-hub.yaml                # 项目配置
+├── README.md
 ├── lib/
-│   ├── detect.sh          # 平台检测模块
-│   ├── install.sh         # 安装/卸载模块
-│   ├── pipeline.sh        # 流水线状态模块
-│   └── role.sh            # 角色管理模块
-├── roles/                 # 角色定义目录
-│   ├── pm/                # 产品经理角色
-│   ├── designer/          # 设计师角色
-│   ├── frontend/          # 前端开发角色
-│   ├── backend/           # 后端开发角色
-│   └── qa/                # 测试/QA 角色
+│   ├── detect.sh                 # 平台检测模块
+│   ├── install.sh                # 安装/卸载/更新/升级模块
+│   ├── role.sh                   # 角色管理/导入/导出模块
+│   └── pipeline.sh               # 流水线状态模块
+├── roles/
+│   ├── pm/SKILL.md               # 产品经理
+│   ├── designer/SKILL.md         # UI/UX 设计师
+│   ├── frontend/SKILL.md         # 前端工程师
+│   ├── backend/SKILL.md          # 后端工程师
+│   ├── qa/SKILL.md               # 测试工程师
+│   └── router/SKILL.md           # 角色路由
 ├── .shared/
-│   ├── rules/             # 全局共享规则
-│   └── skills/            # 全局共享技能
-├── templates/             # 角色模板
-├── tests/                 # 测试
-└── README.md              # 本文件
+│   └── rules/
+│       ├── git-rules.md
+│       ├── quality-rules.md
+│       ├── security-rules.md
+│       └── output-rules.md
+├── templates/                    # 角色模板
+└── tests/                        # 测试
 ```
 
 ---
 
-## 📄 许可证
+## 支持平台
+
+| 平台 | 检测方式 | 全局安装路径 | 项目安装路径 |
+|------|---------|-------------|-------------|
+| **Reasonix** | 目录检测 | `~/Library/Application Support/reasonix/skills` | `.reasonix/skills` |
+| **Qoder** | 目录检测 | `~/.qoder/skills` | `.qoder/skills` |
+| **Claude** | 目录检测 | `~/.claude/skills` | `.claude/skills` |
+| **Cursor** | 目录检测 | `~/.cursor/skills` | `.cursor/skills` |
+| **WorkBuddy** | 目录检测 | `~/.workbuddy/skills` | `.workbuddy/skills` |
+| **Codex** | 目录检测 | `~/.codex/skills` | `.codex/skills` |
+| **Gemini** | 目录检测 | `~/.gemini/skills` | `.gemini/skills` |
+
+---
+
+## 工作原理
+
+```
+1. agent-hub detect
+   扫描本地目录，检测哪些 Agent 平台已安装
+
+2. agent-hub install pm --project
+   读取 roles/pm/SKILL.md
+   → 复制到 .reasonix/skills/pm/SKILL.md
+   → 复制到 .qoder/skills/pm/SKILL.md
+   → 复制到 .claude/skills/pm/SKILL.md
+   → ...（所有检测到的平台）
+   同时复制 rules/、agents/、.shared/rules/
+
+3. 用户在 Agent 中使用
+   Agent 读取 SKILL.md → 加载角色人设 → 以该角色身份工作
+```
+
+---
+
+## 许可证
 
 MIT License
 
-Copyright (c) 2025
+---
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## 致谢
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+角色定义格式参考 [skills-install-sh](https://github.com/your-username/skills-install-sh) 项目。
