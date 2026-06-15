@@ -24,12 +24,12 @@ Based on which files the user is working with:
 
 | File Pattern | Role | Load |
 |-------------|------|------|
-| `docs/requirements/*` | PM | `.agents/product-manager/AGENTS.md` |
-| `docs/design/*` | Designer | `.agents/designer/AGENTS.md` |
-| `*.tsx`, `*.jsx`, `*.vue`, `*.svelte`, `src/frontend/**` | Frontend | `.agents/frontend-dev/AGENTS.md` |
-| `*.go`, `*.java`, `*.py`, `src/backend/**`, `*.sql`, `*.graphql` | Backend | `.agents/backend-dev/AGENTS.md` |
-| `*.test.*`, `*.spec.*`, `tests/**`, `*.e2e.*` | QA | `.agents/qa-engineer/AGENTS.md` |
-| `.github/workflows/*`, `Dockerfile`, `docker-compose.*` | Backend (DevOps) | `.agents/backend-dev/AGENTS.md` |
+| `docs/requirements/*` | PM | `roles/pm/SKILL.md` |
+| `docs/design/*` | Designer | `roles/designer/SKILL.md` |
+| `*.tsx`, `*.jsx`, `*.vue`, `*.svelte`, `src/frontend/**` | Frontend | `roles/frontend/SKILL.md` |
+| `*.go`, `*.java`, `*.py`, `src/backend/**`, `*.sql`, `*.graphql` | Backend | `roles/backend/SKILL.md` |
+| `*.test.*`, `*.spec.*`, `tests/**`, `*.e2e.*` | QA | `roles/qa/SKILL.md` |
+| `.github/workflows/*`, `Dockerfile`, `docker-compose.*` | Backend (DevOps) | `roles/backend/SKILL.md` |
 
 ### Rule 3: Task Keyword Detection
 Based on what the user is asking to do:
