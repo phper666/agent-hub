@@ -407,14 +407,20 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **Stars** | 7.2k+ |
 | **许可证** | Apache-2.0 License |
 | **集成方式** | 共享规则（代码审查规范） |
-| **用途** | AI 驱动的代码审查规范，阿里巴巴内部验证，确定性工程 + Agent 混合架构 |
+| **用途** | 开发阶段的代码审查规范，帮助开发者在提交代码前发现和修复问题 |
 | **集成内容** | 审查规则系统（四层优先级链）、路径过滤系统（include/exclude）、审查检查清单（安全性/代码质量/规范性/测试）、审查输出格式 |
 | **集成位置** | `.shared/rules/code-review-rules.md` |
+| **适用角色** | Frontend、Backend（写代码时使用） |
 
 **核心理念**：
 - 确定性工程保证正确性
 - Agent 处理动态决策
 - 四层优先级链：用户指定 > 项目配置 > 全局配置 > 系统默认
+
+**使用场景**：
+- Frontend 开发者写 React/Vue 代码时审查
+- Backend 开发者写 API/数据库代码时审查
+- 提交代码前自动检查代码质量
 
 ---
 
@@ -429,6 +435,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **用途** | AI 驱动的 PR 审查 Agent，自动化 PR 描述生成、代码审查、改进建议 |
 | **集成内容** | 核心工具（/describe、/review、/improve、/ask、/update_changelog）、CI/CD 集成、审查报告模板 |
 | **集成位置** | `roles/qa/skills/pr-review/SKILL.md` |
+| **适用角色** | QA（PR 审查时使用） |
 
 **核心工具**：
 
@@ -442,6 +449,12 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 **平台支持**：GitHub、GitLab、BitBucket、Azure DevOps、Gitea
 
+**协作审查流程**（基于 collaborative-review skill）：
+1. **分发审查任务**：并行启动 4 个专项 Agent（security/quality/performance/test）
+2. **并行审查**：每个 Agent 独立审查，输出结构化报告
+3. **汇总审查结果**：收集所有 Agent 的发现，去重和合并同类问题
+4. **统一 Review**：解决冲突，确定优先级，输出最终审查决策
+
 ---
 
 ### 集成方式汇总
@@ -450,7 +463,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 |---------|---------|---------|---------|
 | markitdown | 必备工具 | 所有角色 | `roles/*/SKILL.md` |
 | superpowers | 按角色独立集成 | Designer、Frontend、Backend、QA | `roles/<role>/skills/` |
-| open-code-review | 共享规则 | QA | `.shared/rules/code-review-rules.md` |
+| open-code-review | 共享规则 | Frontend、Backend | `.shared/rules/code-review-rules.md` |
 | pr-agent | 角色专属 Skill | QA | `roles/qa/skills/pr-review/SKILL.md` |
 | ECC | 共享规则 | 所有角色 | `.shared/rules/code-standards.md` |
 | taste-skill | 角色专属规范 | Designer、Frontend | `roles/designer/SKILL.md`、`roles/frontend/SKILL.md` |
