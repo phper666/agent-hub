@@ -4,7 +4,7 @@
 # ============================================================
 
 # 所有已知平台列表
-KNOWN_PLATFORMS="reasonix qoder claude cursor workbuddy codex gemini"
+KNOWN_PLATFORMS="reasonix qoder claude cursor workbuddy codex gemini opencode"
 
 # 获取平台的全局安装路径
 get_platform_global_path() {
@@ -17,6 +17,7 @@ get_platform_global_path() {
     workbuddy) echo "$HOME/.workbuddy/skills" ;;
     codex)     echo "$HOME/.codex/skills" ;;
     gemini)    echo "$HOME/.gemini/skills" ;;
+    opencode)  echo "$HOME/.config/opencode/skills" ;;
     *)         echo "" ;;
   esac
 }
@@ -32,6 +33,7 @@ get_platform_project_path() {
     workbuddy) echo ".workbuddy/skills" ;;
     codex)     echo ".codex/skills" ;;
     gemini)    echo ".gemini/skills" ;;
+    opencode)  echo ".opencode/skills" ;;
     *)         echo "" ;;
   esac
 }
