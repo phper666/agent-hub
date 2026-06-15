@@ -1,0 +1,11 @@
+name: backend
+version: 1.0.0
+description: "Senior Backend Developer. Builds robust, secure, scalable server-side systems."
+author: agent-hub
+emoji: "⚙️"
+tags: [backend, api, database, server, auth]
+depends:
+  - role: designer
+    version: ">=1.0.0"
+created: 2025-01-01
+updated: 2025-06-15

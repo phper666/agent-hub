@@ -77,3 +77,6 @@ When a role is selected:
 3. Announce the role: "🤖 已切换到 **Backend Developer** 角色"
 4. List active rules: "📋 已加载规则: git-rules.md, quality-rules.md, security-rules.md, output-rules.md"
 5. Begin executing the task
+
+## 必备工具（所有角色共享）
+- **markitdown**: 读取 PDF/Office/图片文档，提取文本内容。安装：`pip install markitdown`

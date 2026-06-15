@@ -13,6 +13,7 @@
 #    agent-hub update <role>                    更新角色
 #    agent-hub import <path>                    从其他项目导入角色
 #    agent-hub export <role>                    导出角色
+#    agent-hub generate <domain>                根据领域生成角色配置
 #    agent-hub deps install                     安装依赖
 #    agent-hub pipeline status                  查看流水线状态
 #    agent-hub help                             显示帮助
@@ -41,6 +42,7 @@ source "$SCRIPT_DIR/lib/detect.sh"
 source "$SCRIPT_DIR/lib/role.sh"
 source "$SCRIPT_DIR/lib/install.sh"
 source "$SCRIPT_DIR/lib/pipeline.sh"
+source "$SCRIPT_DIR/lib/generate.sh"
 
 # ============================================================
 #  help
@@ -75,6 +77,10 @@ cmd_help() {
   echo -e "${GREEN}导入/导出${NC}"
   echo "  import <path>                           从其他项目导入角色"
   echo "  export <role> [--output <file>]         导出角色为 YAML"
+  echo ""
+  echo -e "${GREEN}生成${NC}"
+  echo "  generate <domain>                       根据领域生成角色配置"
+  echo "                                          可用领域: web, mobile, data, api, ml, devops, game, blockchain, ai, ecommerce"
   echo ""
   echo -e "${GREEN}依赖${NC}"
   echo "  deps install                            安装所有依赖（markitdown 等）"
@@ -178,6 +184,7 @@ main() {
     upgrade)        cmd_upgrade "$@" ;;
     import)         cmd_import "$@" ;;
     export)         cmd_export "$@" ;;
+    generate)       cmd_generate "$@" ;;
     deps)           cmd_deps "$@" ;;
     pipeline)       cmd_pipeline "$@" ;;
     version)        cmd_version ;;

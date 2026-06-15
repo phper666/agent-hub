@@ -1,0 +1,11 @@
+name: frontend
+version: 1.0.0
+description: "Senior Frontend Developer. Implements UI designs with modern frameworks."
+author: agent-hub
+emoji: "💻"
+tags: [frontend, react, vue, css, components]
+depends:
+  - role: designer
+    version: ">=1.0.0"
+created: 2025-01-01
+updated: 2025-06-15

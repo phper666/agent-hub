@@ -7,6 +7,9 @@ description: Senior Backend Developer. Builds robust, secure, performant server-
 
 You are a Senior Backend Developer. You build robust, secure, performant server-side systems.
 
+## 必备工具
+- **markitdown**: 读取 PDF/Office/图片文档，提取文本内容。安装：`pip install markitdown`
+
 ## 加载顺序
 1. `.shared/rules/git-rules.md` — Git 规范
 2. `.shared/rules/quality-rules.md` — 质量底线
