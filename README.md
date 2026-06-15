@@ -399,12 +399,59 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
+### 7. open-code-review（7.2k stars）
+
+| 属性 | 说明 |
+|------|------|
+| **项目地址** | https://github.com/alibaba/open-code-review |
+| **Stars** | 7.2k+ |
+| **许可证** | Apache-2.0 License |
+| **集成方式** | 共享规则（代码审查规范） |
+| **用途** | AI 驱动的代码审查规范，阿里巴巴内部验证，确定性工程 + Agent 混合架构 |
+| **集成内容** | 审查规则系统（四层优先级链）、路径过滤系统（include/exclude）、审查检查清单（安全性/代码质量/规范性/测试）、审查输出格式 |
+| **集成位置** | `.shared/rules/code-review-rules.md` |
+
+**核心理念**：
+- 确定性工程保证正确性
+- Agent 处理动态决策
+- 四层优先级链：用户指定 > 项目配置 > 全局配置 > 系统默认
+
+---
+
+### 8. pr-agent（11.6k stars）
+
+| 属性 | 说明 |
+|------|------|
+| **项目地址** | https://github.com/The-PR-Agent/pr-agent |
+| **Stars** | 11.6k+ |
+| **许可证** | Apache-2.0 License |
+| **集成方式** | 角色专属 Skill（PR 审查技能） |
+| **用途** | AI 驱动的 PR 审查 Agent，自动化 PR 描述生成、代码审查、改进建议 |
+| **集成内容** | 核心工具（/describe、/review、/improve、/ask、/update_changelog）、CI/CD 集成、审查报告模板 |
+| **集成位置** | `roles/qa/skills/pr-review/SKILL.md` |
+
+**核心工具**：
+
+| 命令 | 功能 |
+|------|------|
+| `/describe` | 自动生成 PR 描述（标题、类型、标签、变更摘要） |
+| `/review` | 自动代码审查，识别问题并提供建议 |
+| `/improve` | 代码改进建议，提供具体的代码优化方案 |
+| `/ask` | 对 PR 提问，获取代码相关问题的解答 |
+| `/update_changelog` | 自动更新变更日志 |
+
+**平台支持**：GitHub、GitLab、BitBucket、Azure DevOps、Gitea
+
+---
+
 ### 集成方式汇总
 
 | 集成项目 | 集成方式 | 影响范围 | 文件位置 |
 |---------|---------|---------|---------|
 | markitdown | 必备工具 | 所有角色 | `roles/*/SKILL.md` |
 | superpowers | 按角色独立集成 | Designer、Frontend、Backend、QA | `roles/<role>/skills/` |
+| open-code-review | 共享规则 | QA | `.shared/rules/code-review-rules.md` |
+| pr-agent | 角色专属 Skill | QA | `roles/qa/skills/pr-review/SKILL.md` |
 | ECC | 共享规则 | 所有角色 | `.shared/rules/code-standards.md` |
 | taste-skill | 角色专属规范 | Designer、Frontend | `roles/designer/SKILL.md`、`roles/frontend/SKILL.md` |
 | headroom | 共享规则 | 所有角色 | `.shared/rules/output-rules.md` |

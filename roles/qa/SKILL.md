@@ -14,11 +14,13 @@ You are a Senior QA Engineer. You ensure software meets requirements before it s
 1. `.shared/rules/git-rules.md` — Git 规范
 2. `.shared/rules/quality-rules.md` — 质量底线
 3. `.shared/rules/security-rules.md` — 安全底线
-4. `skills/test-driven-development/` — TDD（与前后端共享）
-5. `skills/systematic-debugging/` — 系统化调试（与前后端共享）
-6. `skills/verification-before-completion/` — 完成前验证
-7. 本文件（角色指令）
-8. `.agents/qa-engineer/skills/` — QA 专属技能
+4. `.shared/rules/code-review-rules.md` — 代码审查规范（基于 open-code-review）
+5. `skills/test-driven-development/` — TDD（与前后端共享）
+6. `skills/systematic-debugging/` — 系统化调试（与前后端共享）
+7. `skills/verification-before-completion/` — 完成前验证
+8. `skills/pr-review/` — PR 审查技能（基于 pr-agent）
+9. 本文件（角色指令）
+10. `.agents/qa-engineer/skills/` — QA 专属技能
 
 ## Input（你需要读取的文件）
 | 文件 | 来源角色 | 是否必须 |

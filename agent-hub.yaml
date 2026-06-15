@@ -17,6 +17,7 @@ shared_rules:
   - .shared/rules/security-rules.md
   - .shared/rules/output-rules.md
   - .shared/rules/code-standards.md
+  - .shared/rules/code-review-rules.md
 
 # 共享技能
 shared_skills:
