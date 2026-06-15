@@ -196,8 +196,8 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **Stars** | 113k+ |
 | **许可证** | MIT License |
 | **集成方式** | 角色专属 Agent（专家角色库） |
-| **用途** | 211 个即插即用的 AI 专家角色，覆盖 18 个部门，含 50 个中国市场原创角色 |
-| **集成内容** | 8 个软件开发相关角色（前端开发专家、后端架构专家、安全工程师专家、代码审查专家、数据库优化专家、UI 设计专家、UX 研究专家、产品管理专家） |
+| **用途** | 165 个即插即用的 AI 专家角色，覆盖 18 个部门 |
+| **集成内容** | 8 个软件开发相关角色（Frontend Developer、Backend Architect、Security Engineer、Code Reviewer、Database Optimizer、UI Designer、UX Researcher、Product Manager） |
 | **集成位置** | `roles/*/agents/agency/` |
 | **适用角色** | Frontend、Backend、Designer、PM、QA |
 
@@ -205,19 +205,19 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 | 角色 | 文件 | 描述 |
 |------|------|------|
-| 前端开发专家 | `roles/frontend/agents/agency/frontend-developer-expert.md` | 精通现代 Web 技术、React/Vue/Angular 框架、UI 实现和性能优化 |
-| 后端架构专家 | `roles/backend/agents/agency/backend-architect-expert.md` | 资深后端架构师，专精可扩展系统设计、数据库架构、API 开发 |
-| 安全工程师专家 | `roles/qa/agents/agency/security-engineer-expert.md` | 应用安全专家，专精威胁建模、代码审计、安全架构 |
-| 代码审查专家 | `roles/qa/agents/agency/code-reviewer-expert.md` | 代码审查专家，专注于代码质量、最佳实践和团队协作 |
-| 数据库优化专家 | `roles/backend/agents/agency/database-optimizer-expert.md` | 数据库优化专家，专精数据库性能调优、索引策略和查询优化 |
-| UI 设计专家 | `roles/designer/agents/agency/ui-designer-expert.md` | UI 设计专家，专注于用户界面设计、视觉设计和交互设计 |
-| UX 研究专家 | `roles/designer/agents/agency/ux-researcher-expert.md` | UX 研究专家，专注于用户研究、可用性测试和用户体验优化 |
-| 产品管理专家 | `roles/pm/agents/agency/product-manager-expert.md` | 产品管理专家，专注于产品战略、需求分析、优先级排序 |
+| Frontend Developer | `roles/frontend/agents/agency/frontend-developer-expert.md` | Expert in modern web technologies, React/Vue/Angular, UI implementation, and performance optimization |
+| Backend Architect | `roles/backend/agents/agency/backend-architect-expert.md` | Senior architect specializing in scalable system design, database architecture, and API development |
+| Security Engineer | `roles/qa/agents/agency/security-engineer-expert.md` | Application security specialist in threat modeling, code auditing, and security architecture |
+| Code Reviewer | `roles/qa/agents/agency/code-reviewer-expert.md` | Code review specialist focused on code quality, best practices, and team collaboration |
+| Database Optimizer | `roles/backend/agents/agency/database-optimizer-expert.md` | Database optimization specialist in performance tuning, indexing strategies, and query optimization |
+| UI Designer | `roles/designer/agents/agency/ui-designer-expert.md` | UI design specialist focused on user interface design, visual design, and interaction design |
+| UX Researcher | `roles/designer/agents/agency/ux-researcher-expert.md` | UX research specialist focused on user research, usability testing, and user experience optimization |
+| Product Manager | `roles/pm/agents/agency/product-manager-expert.md` | Product management specialist focused on product strategy, requirements analysis, and prioritization |
 
 **不集成的角色类别**：
-- 营销部（小红书/抖音/微信等）— 非软件开发角色
-- 金融部 — 非软件开发角色
-- 医疗部 — 非软件开发角色
+- Marketing — Non-software development roles
+- Finance — Non-software development roles
+- Healthcare — Non-software development roles
 
 ---
 

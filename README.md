@@ -353,14 +353,14 @@ agent-hub/
 │   │   ├── SKILL.md              # 产品经理人设与工作流
 │   │   ├── role.yaml             # 角色元数据
 │   │   └── agents/
-│   │       └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │       └── agency/           # 来自 agency-agents 的专家角色
 │   │           └── product-manager-expert.md
 │   ├── designer/
 │   │   ├── SKILL.md              # UI/UX 设计师人设与工作流
 │   │   ├── role.yaml
 │   │   ├── agents/
 │   │   │   ├── ui-designer.md    # 子角色：UI 设计师
-│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │   └── agency/           # 来自 agency-agents 的专家角色
 │   │   │       ├── ui-designer-expert.md
 │   │   │       └── ux-researcher-expert.md
 │   │   └── skills/               # 设计师专属 skills
@@ -371,7 +371,7 @@ agent-hub/
 │   │   ├── role.yaml
 │   │   ├── agents/
 │   │   │   ├── frontend-developer.md
-│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │   └── agency/           # 来自 agency-agents 的专家角色
 │   │   │       └── frontend-developer-expert.md
 │   │   ├── rules/
 │   │   │   ├── component-rules.md
@@ -391,7 +391,7 @@ agent-hub/
 │   │   ├── agents/
 │   │   │   ├── backend-architect.md
 │   │   │   ├── database-optimizer.md
-│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │   └── agency/           # 来自 agency-agents 的专家角色
 │   │   │       ├── backend-architect-expert.md
 │   │   │       └── database-optimizer-expert.md
 │   │   ├── rules/
@@ -409,7 +409,7 @@ agent-hub/
 │   │   ├── role.yaml
 │   │   ├── agents/
 │   │   │   ├── code-reviewer.md
-│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │   └── agency/           # 来自 agency-agents 的专家角色
 │   │   │       ├── code-reviewer-expert.md
 │   │   │       └── security-engineer-expert.md
 │   │   └── skills/               # QA 专属 skills
