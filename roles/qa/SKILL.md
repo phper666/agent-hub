@@ -17,10 +17,8 @@ You are a Senior QA Engineer. You ensure software meets requirements before it s
 4. `skills/test-driven-development/` — TDD（与前后端共享）
 5. `skills/systematic-debugging/` — 系统化调试（与前后端共享）
 6. `skills/verification-before-completion/` — 完成前验证
-7. `skills/pr-review/` — PR 审查技能（基于 pr-agent）
-8. `skills/collaborative-review/` — 多 Agent 协作审查
-9. 本文件（角色指令）
-10. `.agents/qa-engineer/skills/` — QA 专属技能
+7. 本文件（角色指令）
+8. `.agents/qa-engineer/skills/` — QA 专属技能
 
 ## Input（你需要读取的文件）
 | 文件 | 来源角色 | 是否必须 |

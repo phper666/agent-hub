@@ -427,10 +427,11 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | Tasks | `/speckit.tasks` | 拆分开发任务 |
 
 **与现有集成的协同**：
-- **spec-kit**：定义规格（做什么）
-- **superpowers**：执行工作流（怎么做）
-- **open-code-review**：代码审查（做得好）
-- **pr-agent**：PR 审查（合并前）
+- **spec-kit**：定义规格（做什么）→ PM 角色
+- **superpowers**：执行工作流（怎么做）→ 所有开发者
+- **open-code-review**：代码审查规范（审查什么）→ Frontend、Backend
+- **pr-agent**：PR 审查工具（PR 阶段）→ Frontend、Backend
+- **ECC**：代码规范（做得好）→ 所有开发者
 
 ---
 
@@ -469,8 +470,8 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **集成方式** | 角色专属 Skill（PR 审查技能） |
 | **用途** | AI 驱动的 PR 审查 Agent，自动化 PR 描述生成、代码审查、改进建议 |
 | **集成内容** | 核心工具（/describe、/review、/improve、/ask、/update_changelog）、CI/CD 集成、审查报告模板 |
-| **集成位置** | `roles/qa/skills/pr-review/SKILL.md` |
-| **适用角色** | QA（PR 审查时使用） |
+| **集成位置** | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
+| **适用角色** | Frontend、Backend（开发者互相审查 PR） |
 
 **核心工具**：
 
@@ -500,7 +501,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | superpowers | 按角色独立集成 | Designer、Frontend、Backend、QA | `roles/<role>/skills/` |
 | spec-kit | 角色专属 Skill | PM | `roles/pm/skills/spec-driven-development/SKILL.md` |
 | open-code-review | 共享规则 | Frontend、Backend | `.shared/rules/code-review-rules.md` |
-| pr-agent | 角色专属 Skill | QA | `roles/qa/skills/pr-review/SKILL.md` |
+| pr-agent | 角色专属 Skill | Frontend、Backend | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
 | ECC | 共享规则 | 所有角色 | `.shared/rules/code-standards.md` |
 | taste-skill | 角色专属规范 | Designer、Frontend | `roles/designer/SKILL.md`、`roles/frontend/SKILL.md` |
 | headroom | 共享规则 | 所有角色 | `.shared/rules/output-rules.md` |
