@@ -336,7 +336,7 @@ pip install markitdown
 
 ---
 
-### 3. taste-skill
+### 4. taste-skill
 
 | 属性 | 说明 |
 |------|------|
@@ -350,7 +350,7 @@ pip install markitdown
 
 ---
 
-### 4. headroom
+### 5. headroom
 
 | 属性 | 说明 |
 |------|------|
@@ -364,7 +364,7 @@ pip install markitdown
 
 ---
 
-### 5. harness
+### 6. harness
 
 | 属性 | 说明 |
 |------|------|
@@ -385,7 +385,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
-### 6. supermemory
+### 7. supermemory
 
 | 属性 | 说明 |
 |------|------|
@@ -399,7 +399,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
-### 9. spec-kit（112k stars）
+### 8. spec-kit（112k stars）
 
 | 属性 | 说明 |
 |------|------|
@@ -436,7 +436,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
-### 10. agency-agents-zh（15k stars）
+### 9. agency-agents-zh（15k stars）
 
 | 属性 | 说明 |
 |------|------|
@@ -469,7 +469,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
-### 11. open-code-review（7.2k stars）
+### 10. open-code-review（7.2k stars）
 
 | 属性 | 说明 |
 |------|------|
@@ -494,7 +494,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
-### 8. pr-agent（11.6k stars）
+### 11. pr-agent（11.6k stars）
 
 | 属性 | 说明 |
 |------|------|
@@ -590,12 +590,18 @@ agent-hub/
 ├── roles/                        # 内置角色
 │   ├── pm/
 │   │   ├── SKILL.md              # 产品经理人设与工作流
-│   │   └── role.yaml             # 角色元数据
+│   │   ├── role.yaml             # 角色元数据
+│   │   └── agents/
+│   │       └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │           └── product-manager-expert.md
 │   ├── designer/
 │   │   ├── SKILL.md              # UI/UX 设计师人设与工作流
 │   │   ├── role.yaml
 │   │   ├── agents/
-│   │   │   └── ui-designer.md    # 子角色：UI 设计师
+│   │   │   ├── ui-designer.md    # 子角色：UI 设计师
+│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │       ├── ui-designer-expert.md
+│   │   │       └── ux-researcher-expert.md
 │   │   └── skills/               # 设计师专属 skills
 │   │       ├── tailwind-design-system/
 │   │       └── frontend-ui-engineering/
@@ -603,7 +609,9 @@ agent-hub/
 │   │   ├── SKILL.md              # 前端工程师人设与工作流
 │   │   ├── role.yaml
 │   │   ├── agents/
-│   │   │   └── frontend-developer.md
+│   │   │   ├── frontend-developer.md
+│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │       └── frontend-developer-expert.md
 │   │   ├── rules/
 │   │   │   ├── component-rules.md
 │   │   │   ├── state-management-rules.md
@@ -613,13 +621,18 @@ agent-hub/
 │   │       ├── subagent-driven-development/
 │   │       ├── systematic-debugging/
 │   │       ├── tailwind-design-system/
-│   │       └── frontend-ui-engineering/
+│   │       ├── frontend-ui-engineering/
+│   │       ├── pr-review/        # PR 审查技能（基于 pr-agent）
+│   │       └── collaborative-review/  # 多 Agent 协作审查
 │   ├── backend/
 │   │   ├── SKILL.md              # 后端工程师人设与工作流
 │   │   ├── role.yaml
 │   │   ├── agents/
 │   │   │   ├── backend-architect.md
-│   │   │   └── database-optimizer.md
+│   │   │   ├── database-optimizer.md
+│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │       ├── backend-architect-expert.md
+│   │   │       └── database-optimizer-expert.md
 │   │   ├── rules/
 │   │   │   ├── api-rules.md
 │   │   │   ├── backend-security-rules.md
@@ -627,12 +640,17 @@ agent-hub/
 │   │   └── skills/               # 后端专属 skills
 │   │       ├── test-driven-development/
 │   │       ├── subagent-driven-development/
-│   │       └── systematic-debugging/
+│   │       ├── systematic-debugging/
+│   │       ├── pr-review/        # PR 审查技能（基于 pr-agent）
+│   │       └── collaborative-review/  # 多 Agent 协作审查
 │   ├── qa/
 │   │   ├── SKILL.md              # 测试工程师人设与工作流
 │   │   ├── role.yaml
 │   │   ├── agents/
-│   │   │   └── code-reviewer.md
+│   │   │   ├── code-reviewer.md
+│   │   │   └── agency/           # 来自 agency-agents-zh 的专家角色
+│   │   │       ├── code-reviewer-expert.md
+│   │   │       └── security-engineer-expert.md
 │   │   └── skills/               # QA 专属 skills
 │   │       ├── test-driven-development/
 │   │       ├── systematic-debugging/
@@ -646,9 +664,11 @@ agent-hub/
 │   │   ├── quality-rules.md      # 代码质量标准
 │   │   ├── security-rules.md     # 安全编码规范
 │   │   ├── output-rules.md       # 输出格式规范（含 headroom 优化）
-│   │   └── code-standards.md     # 代码规范（基于 ECC）
+│   │   ├── code-standards.md     # 代码规范（基于 ECC）
+│   │   └── code-review-rules.md  # 代码审查规范（基于 open-code-review）
 │   └── skills/
-│       └── memory-guide.md       # 记忆管理指南（基于 supermemory）
+│       ├── memory-guide.md       # 记忆管理指南（基于 supermemory）
+│       └── spec-driven-development/  # 规格驱动开发（基于 spec-kit）
 ├── templates/                    # 角色模板
 └── tests/                        # 测试
 ```
