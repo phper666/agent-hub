@@ -399,7 +399,42 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
-### 7. open-code-review（7.2k stars）
+### 9. spec-kit（112k stars）
+
+| 属性 | 说明 |
+|------|------|
+| **项目地址** | https://github.com/github/spec-kit |
+| **Stars** | 112k+ |
+| **许可证** | MIT License |
+| **集成方式** | 角色专属 Skill（规格驱动开发） |
+| **用途** | 规格驱动开发工具包，帮助定义清晰的产品规格和开发原则 |
+| **集成内容** | 4 个开发阶段：Constitution（项目原则）→ Specify（产品规格）→ Plan（实现计划）→ Tasks（任务拆分） |
+| **集成位置** | `roles/pm/skills/spec-driven-development/SKILL.md` |
+| **适用角色** | PM（定义产品规格） |
+
+**核心理念**：
+- 规格成为可执行的，直接生成工作实现
+- 先想清楚"做什么"和"为什么"，再决定"怎么做"
+- 避免"vibe coding"（随意编码）
+
+**开发阶段**：
+
+| 阶段 | 命令 | 功能 |
+|------|------|------|
+| Constitution | `/speckit.constitution` | 创建项目原则和开发指南 |
+| Specify | `/speckit.specify` | 创建产品规格（做什么、为什么） |
+| Plan | `/speckit.plan` | 创建实现计划 |
+| Tasks | `/speckit.tasks` | 拆分开发任务 |
+
+**与现有集成的协同**：
+- **spec-kit**：定义规格（做什么）
+- **superpowers**：执行工作流（怎么做）
+- **open-code-review**：代码审查（做得好）
+- **pr-agent**：PR 审查（合并前）
+
+---
+
+### 10. open-code-review（7.2k stars）
 
 | 属性 | 说明 |
 |------|------|
@@ -463,6 +498,7 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 |---------|---------|---------|---------|
 | markitdown | 必备工具 | 所有角色 | `roles/*/SKILL.md` |
 | superpowers | 按角色独立集成 | Designer、Frontend、Backend、QA | `roles/<role>/skills/` |
+| spec-kit | 角色专属 Skill | PM | `roles/pm/skills/spec-driven-development/SKILL.md` |
 | open-code-review | 共享规则 | Frontend、Backend | `.shared/rules/code-review-rules.md` |
 | pr-agent | 角色专属 Skill | QA | `roles/qa/skills/pr-review/SKILL.md` |
 | ECC | 共享规则 | 所有角色 | `.shared/rules/code-standards.md` |

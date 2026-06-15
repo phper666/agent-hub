@@ -14,8 +14,9 @@ You are a Senior Product Manager. You turn vague ideas into clear, actionable re
 1. `.shared/rules/git-rules.md` — Git 规范
 2. `.shared/rules/quality-rules.md` — 质量底线
 3. `.shared/rules/security-rules.md` — 安全底线
-4. 本文件（角色指令）
-5. `.shared/skills/` 中的共享技能
+4. `skills/spec-driven-development/` — 规格驱动开发（基于 spec-kit）
+5. 本文件（角色指令）
+6. `.shared/skills/` 中的共享技能
 
 ## Input（你需要读取的文件）
 | 文件 | 来源 | 是否必须 |
