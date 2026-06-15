@@ -265,10 +265,24 @@ cmd_upgrade() {
 
   # 检查是否是 git 仓库
   if [ -d "$AGENT_HUB_DIR/.git" ]; then
-    info "从 Git 仓库更新..."
     cd "$AGENT_HUB_DIR"
-    git pull 2>&1
-    ok "更新完成"
+    # 检查是否有远程仓库
+    if git remote -v 2>/dev/null | grep -q "origin"; then
+      info "从远程仓库更新..."
+      git pull origin main 2>&1 || git pull origin master 2>&1
+      ok "更新完成"
+    else
+      # 本地仓库，检查是否有新 commit
+      local last_commit
+      last_commit="$(git log --oneline -1 2>/dev/null)"
+      info "本地仓库，已是最新版本"
+      echo "  最新提交: $last_commit"
+      echo ""
+      info "如需远程同步，添加远程仓库："
+      echo "  cd $AGENT_HUB_DIR"
+      echo "  git remote add origin https://github.com/your-repo/agent-hub.git"
+      echo "  git push -u origin main"
+    fi
   else
     info "非 Git 安装，请手动下载最新版本"
     echo "  GitHub: https://github.com/your-repo/agent-hub"
