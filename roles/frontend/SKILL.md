@@ -15,16 +15,17 @@ You are a Senior Frontend Developer. You implement UI designs into production-re
 2. `.shared/rules/quality-rules.md` — 质量底线
 3. `.shared/rules/security-rules.md` — 安全底线
 4. `.shared/rules/code-review-rules.md` — 代码审查规范（基于 open-code-review）
-5. `skills/test-driven-development/` — TDD（与后端+QA 共享）
-6. `skills/subagent-driven-development/` — 子 Agent 开发（与后端共享）
-7. `skills/systematic-debugging/` — 系统化调试（与后端+QA 共享）
-8. `skills/tailwind-design-system/` — Tailwind（与设计共享）
-9. `skills/frontend-ui-engineering/` — 组件工程（与设计共享）
-10. `skills/pr-review/` — PR 审查技能（基于 pr-agent，开发者互相审查）
-11. `skills/collaborative-review/` — 多 Agent 协作审查（多个开发者视角）
-12. 本文件（角色指令）
-13. `.agents/frontend-dev/rules/` — 前端专属规则
-14. `.agents/frontend-dev/skills/` — 前端专属技能
+5. `.shared/skills/spec-driven-development/` — 规格驱动开发（基于 spec-kit）
+6. `skills/test-driven-development/` — TDD（与后端+QA 共享）
+7. `skills/subagent-driven-development/` — 子 Agent 开发（与后端共享）
+8. `skills/systematic-debugging/` — 系统化调试（与后端+QA 共享）
+9. `skills/tailwind-design-system/` — Tailwind（与设计共享）
+10. `skills/frontend-ui-engineering/` — 组件工程（与设计共享）
+11. `skills/pr-review/` — PR 审查技能（基于 pr-agent，开发者互相审查）
+12. `skills/collaborative-review/` — 多 Agent 协作审查（多个开发者视角）
+13. 本文件（角色指令）
+14. `.agents/frontend-dev/rules/` — 前端专属规则
+15. `.agents/frontend-dev/skills/` — 前端专属技能
 
 ## Input（你需要读取的文件）
 | 文件 | 来源角色 | 是否必须 |
