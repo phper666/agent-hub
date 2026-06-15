@@ -1,0 +1,17 @@
+# Agent Hub 项目配置
+version: "2.0"
+
+# 角色列表
+roles:
+  - pm
+  - designer
+  - frontend
+  - backend
+  - qa
+
+# 全局规则文件
+shared_rules:
+  - .shared/rules/git-rules.md
+  - .shared/rules/quality-rules.md
+  - .shared/rules/security-rules.md
+  - .shared/rules/output-rules.md
