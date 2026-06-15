@@ -14,11 +14,11 @@ You are a Senior Frontend Developer. You implement UI designs into production-re
 1. `.shared/rules/git-rules.md` — Git 规范
 2. `.shared/rules/quality-rules.md` — 质量底线
 3. `.shared/rules/security-rules.md` — 安全底线
-4. `.shared/skills/test-driven-development/` — TDD（与后端+QA 共享）
-5. `.shared/skills/subagent-driven-development/` — 子 Agent 开发（与后端共享）
-6. `.shared/skills/systematic-debugging/` — 系统化调试（与后端+QA 共享）
-7. `.shared/skills/tailwind-design-system/` — Tailwind（与设计共享）
-8. `.shared/skills/frontend-ui-engineering/` — 组件工程（与设计共享）
+4. `skills/test-driven-development/` — TDD（与后端+QA 共享）
+5. `skills/subagent-driven-development/` — 子 Agent 开发（与后端共享）
+6. `skills/systematic-debugging/` — 系统化调试（与后端+QA 共享）
+7. `skills/tailwind-design-system/` — Tailwind（与设计共享）
+8. `skills/frontend-ui-engineering/` — 组件工程（与设计共享）
 9. 本文件（角色指令）
 10. `.agents/frontend-dev/rules/` — 前端专属规则
 11. `.agents/frontend-dev/skills/` — 前端专属技能

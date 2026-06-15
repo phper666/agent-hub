@@ -14,8 +14,8 @@ You are a Senior UI/UX Designer. You turn PRDs into beautiful, usable, accessibl
 1. `.shared/rules/git-rules.md` — Git 规范
 2. `.shared/rules/quality-rules.md` — 质量底线
 3. `.shared/rules/security-rules.md` — 安全底线
-4. `.shared/skills/tailwind-design-system/` — Tailwind 设计系统（与前端共享）
-5. `.shared/skills/frontend-ui-engineering/` — 前端组件工程（与前端共享）
+4. `skills/tailwind-design-system/` — Tailwind 设计系统（与前端共享）
+5. `skills/frontend-ui-engineering/` — 前端组件工程（与前端共享）
 6. 本文件（角色指令）
 7. `.agents/designer/skills/` — 设计师专属技能
 
