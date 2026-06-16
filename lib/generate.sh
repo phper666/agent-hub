@@ -54,86 +54,86 @@ get_domain_roles() {
   case "$domain" in
     web)
       cat << 'EOF'
-product-manager|Senior Product Manager|需求分析和产品规划
-ui-designer|Senior UI/UX Designer|界面设计和用户体验
-frontend-developer|Senior Frontend Developer|React/Vue 实现
-backend-developer|Senior Backend Developer|API 和数据库设计
-qa-engineer|Senior QA Engineer|质量保证
+product-manager|Senior Product Manager|Requirements analysis and product planning
+ui-designer|Senior UI/UX Designer|Interface design and user experience
+frontend-developer|Senior Frontend Developer|React/Vue implementation
+backend-developer|Senior Backend Developer|API and database design
+qa-engineer|Senior QA Engineer|Quality assurance
 EOF
       ;;
     mobile)
       cat << 'EOF'
-product-manager|Senior Product Manager|移动端产品规划
-mobile-designer|Senior Mobile Designer|iOS/Android 界面设计
-ios-developer|Senior iOS Developer|Swift/SwiftUI 实现
-android-developer|Senior Android Developer|Kotlin 实现
-mobile-qa|Senior Mobile QA|设备兼容性测试
+product-manager|Senior Product Manager|Mobile product planning
+mobile-designer|Senior Mobile Designer|iOS/Android interface design
+ios-developer|Senior iOS Developer|Swift/SwiftUI implementation
+android-developer|Senior Android Developer|Kotlin implementation
+mobile-qa|Senior Mobile QA|Device compatibility testing
 EOF
       ;;
     data)
       cat << 'EOF'
-data-analyst|Senior Data Analyst|数据探索和洞察
-data-engineer|Senior Data Engineer|数据管道和 ETL
-ml-engineer|Senior ML Engineer|模型训练和部署
-data-scientist|Senior Data Scientist|高级分析和建模
+data-analyst|Senior Data Analyst|Data exploration and insights
+data-engineer|Senior Data Engineer|Data pipeline and ETL
+ml-engineer|Senior ML Engineer|Model training and deployment
+data-scientist|Senior Data Scientist|Advanced analysis and modeling
 EOF
       ;;
     api)
       cat << 'EOF'
-api-architect|Senior API Architect|API 设计和规范
-backend-developer|Senior Backend Developer|API 实现
-api-security|API Security Expert|安全审计和防护
-api-docs|API Documentation Engineer|文档和 SDK
+api-architect|Senior API Architect|API design and specification
+backend-developer|Senior Backend Developer|API implementation
+api-security|API Security Expert|Security auditing and protection
+api-docs|API Documentation Engineer|Documentation and SDK
 EOF
       ;;
     ml)
       cat << 'EOF'
-ml-researcher|ML Researcher|算法研究和实验
-data-engineer|Senior Data Engineer|数据准备和特征工程
-ml-engineer|Senior ML Engineer|模型训练和优化
-mlops-engineer|MLOps Engineer|模型部署和监控
+ml-researcher|ML Researcher|Algorithm research and experimentation
+data-engineer|Senior Data Engineer|Data preparation and feature engineering
+ml-engineer|Senior ML Engineer|Model training and optimization
+mlops-engineer|MLOps Engineer|Model deployment and monitoring
 EOF
       ;;
     devops)
       cat << 'EOF'
-devops-engineer|Senior DevOps Engineer|基础设施和部署
-sre-engineer|Senior SRE Engineer|可靠性和监控
-security-engineer|Security Engineer|安全合规和审计
-platform-engineer|Platform Engineer|开发者体验
+devops-engineer|Senior DevOps Engineer|Infrastructure and deployment
+sre-engineer|Senior SRE Engineer|Reliability and monitoring
+security-engineer|Security Engineer|Security compliance and auditing
+platform-engineer|Platform Engineer|Developer experience
 EOF
       ;;
     game)
       cat << 'EOF'
-game-designer|Senior Game Designer|游戏机制和玩法设计
-game-programmer|Senior Game Programmer|游戏逻辑和引擎
-game-artist|Senior Game Artist|视觉资产
-game-audio|Senior Game Audio|音效和音乐
-game-qa|Senior Game QA|游戏测试
+game-designer|Senior Game Designer|Game mechanics and level design
+game-programmer|Senior Game Programmer|Game logic and engine
+game-artist|Senior Game Artist|Visual assets
+game-audio|Senior Game Audio|Sound effects and music
+game-qa|Senior Game QA|Game testing
 EOF
       ;;
     blockchain)
       cat << 'EOF'
-blockchain-architect|Blockchain Architect|链上架构设计
-smart-contract-dev|Smart Contract Developer|合约开发
-dapp-developer|DApp Developer|去中心化应用
-blockchain-security|Blockchain Security Expert|合约审计
+blockchain-architect|Blockchain Architect|On-chain architecture design
+smart-contract-dev|Smart Contract Developer|Contract development
+dapp-developer|DApp Developer|Decentralized applications
+blockchain-security|Blockchain Security Expert|Contract auditing
 EOF
       ;;
     ai)
       cat << 'EOF'
-ai-engineer|AI Engineer|LLM 应用开发
-mlops-engineer|MLOps Engineer|模型部署和运维
-data-engineer|Senior Data Engineer|数据准备和向量化
-ai-product-manager|AI Product Manager|AI 产品设计
+ai-engineer|AI Engineer|LLM application development
+mlops-engineer|MLOps Engineer|Model deployment and operations
+data-engineer|Senior Data Engineer|Data preparation and vectorization
+ai-product-manager|AI Product Manager|AI product design
 EOF
       ;;
     ecommerce)
       cat << 'EOF'
-ecommerce-manager|E-commerce Manager|业务策略和运营
-frontend-developer|Senior Frontend Developer|商城前端
-backend-developer|Senior Backend Developer|订单和支付系统
-ux-designer|Senior UX Designer|购物体验设计
-data-analyst|Senior Data Analyst|销售数据分析
+ecommerce-manager|E-commerce Manager|Business strategy and operations
+frontend-developer|Senior Frontend Developer|E-commerce frontend
+backend-developer|Senior Backend Developer|Orders and payment system
+ux-designer|Senior UX Designer|Shopping experience design
+data-analyst|Senior Data Analyst|Sales data analysis
 EOF
       ;;
     *)
@@ -207,55 +207,56 @@ name: $name
 description: $description.
 ---
 
-# 角色框架: $title
+# Role Framework: $title
 
-你是${title}的**工程框架**，负责协调规则加载、输入/输出管理和流水线状态更新。
+You are the **engineering framework** for the $title role, responsible for coordinating rule loading, input/output management, and pipeline status updates.
+Your domain expertise and technical depth are defined by the expert files (see loading order below).
 
-## 必备工具
-- **markitdown**: 读取 PDF/Office/图片文档，提取文本内容。安装：\`pip install markitdown\`
+## Prerequisites
+- **markitdown**: Convert PDF/Office/images to text. Install: \`pip install markitdown\`
 
-## 加载顺序
-1. \`.shared/rules/git-rules.md\` — Git 规范
-2. \`.shared/rules/quality-rules.md\` — 质量底线
-3. \`.shared/rules/security-rules.md\` — 安全底线
-4. 本文件（角色框架 — 工程流程协调）
+## Loading Order
+1. \`.shared/rules/git-rules.md\` — Git conventions
+2. \`.shared/rules/quality-rules.md\` — Quality standards
+3. \`.shared/rules/security-rules.md\` — Security standards
+4. This file (role framework)
 
-> 如需添加领域专家知识，创建 \`agents/agency/<name>-expert.md\` 并在此处引用。
+> Add \`agents/agency/<name>-expert.md\` here to load domain expertise.
 
-## Input（你需要读取的文件）
-| 文件 | 来源角色 | 是否必须 |
-|------|---------|:---:|
+## Input
+| File | Source | Required |
+|------|--------|:--------:|
 | docs/current/requirements/PRD.md | PM | ✅ |
-| docs/current/status.md | 所有角色 | ✅（检查依赖状态） |
+| docs/current/status.md | All roles | ✅ (dependency check) |
 
-## Output（你需要产出的文件）
-| 文件 | 下游消费者 | 是否必须 |
-|------|-----------|:---:|
-| docs/current/status.md | 所有角色 | ✅（更新状态） |
+## Output
+| File | Consumer | Required |
+|------|----------|:--------:|
+| docs/current/status.md | All roles | ✅ (status update) |
 
-## Dependency Check（启动前必须检查）
-启动前必须读取 \`docs/current/status.md\`，确认上游角色已完成。
+## Dependency Check
+Before starting, read \`docs/current/status.md\` to verify upstream roles are complete.
 
-## 工程原则
-- 专注于自己的职责范围
-- 与其他角色协作，不越界
-- 保持代码和文档的质量
+## Engineering Principles
+- Stay within your role boundaries
+- Collaborate with other roles, don't overstep
+- Maintain code and documentation quality
 
-## 工程流程
+## Workflow
 
-### Step 1: 读取需求
-读取 PRD 和用户故事
+### Step 1: Read Requirements
+Read PRD and user stories
 
-### Step 2: 执行任务
-根据角色职责执行具体任务
+### Step 2: Execute
+Execute tasks according to your role definition
 
-### Step 3: 更新状态
-更新 \`docs/current/status.md\`
+### Step 3: Update Status
+Update \`docs/current/status.md\`
 
-## 你不能做的事
-- 不做其他角色的工作
-- 不修改其他角色的产出物
-- 不跳过质量检查
+## What You Do NOT Do
+- Do not do other roles' work
+- Do not modify other roles' outputs
+- Do not skip quality checks
 EOF
 
   # 创建 role.yaml

@@ -124,9 +124,9 @@ cmd_pipeline_reset() {
       [ -d "$role_dir" ] || continue
       local role
       role="$(basename "$role_dir")"
-      # 首字母大写
-      local capitalized
-      capitalized="$(echo "$role" | sed 's/./\U&/')"
+      # 首字母大写（兼容 macOS/Linux）
+      local first_char="${role:0:1}"
+      local capitalized="${first_char^^}${role:1}"
       echo "| $capitalized | ⏳ 待开始 | - |"
     done
   } > "$status_file"

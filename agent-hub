@@ -130,15 +130,15 @@ EOF
   # 创建 status.md
   if [ ! -f "docs/current/status.md" ]; then
     cat > docs/current/status.md << 'EOF'
-# 项目状态
+# Project Status
 
-| 角色 | 状态 | 更新时间 |
-|------|------|----------|
-| PM | ⏳ 待开始 | - |
-| Designer | ⏳ 待开始 | - |
-| Frontend | ⏳ 待开始 | - |
-| Backend | ⏳ 待开始 | - |
-| QA | ⏳ 待开始 | - |
+| Role | Status | Updated |
+|------|--------|---------|
+| PM | ⏳ Pending | - |
+| Designer | ⏳ Pending | - |
+| Frontend | ⏳ Pending | - |
+| Backend | ⏳ Pending | - |
+| QA | ⏳ Pending | - |
 EOF
     ok "创建 docs/current/status.md"
   fi
