@@ -98,6 +98,8 @@ When subagents return:
 **Success Criteria**: [How to verify the subagent did the right thing]
 ```
 
+**Platform Note**: If your Agent platform supports named subagents (e.g. WorkBuddy Agent ID, Reasonix skill name), pass the role path (e.g. `roles/backend/SKILL.md`) as the subagent identifier so it inherits the correct role definition. Do NOT use ad-hoc names.
+
 ## Pipeline Dispatch Map
 
 ```

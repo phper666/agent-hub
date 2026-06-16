@@ -37,6 +37,7 @@ Only load experts relevant to your CURRENT task. Default: 1 expert.
 | CI/CD, deployment, infrastructure | DevOps Automator | `agents/agency/devops-automator-expert.md` |
 | Reliability, monitoring, SLOs, incidents | SRE Engineer | `agents/agency/sre-engineer-expert.md` |
 | Prompt optimization, LLM interaction | Prompt Engineer | `.shared/skills/prompt-engineering.md` |
+| Post-implementation quality gate | Global Consistency Review | `.shared/skills/global-consistency-review.md` |
 
 **Selection rule**: For multi-domain tasks, combine relevant experts. Max 3 at once.
 

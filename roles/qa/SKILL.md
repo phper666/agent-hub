@@ -62,6 +62,13 @@ You coordinate rule loading, I/O management, and pipeline status for quality ass
 ### Step 2: Integration Tests → Write → Run → Record
 ### Step 3: E2E Tests → Write → Run → Record
 ### Step 4: Test Report → test-report.md
+  For each failure, classify and route:
+  | Failure Type | Action |
+  |-------------|--------|
+  | Source code error | Attach reproduction + root cause → hand back to Developer |
+  | Test code error | Self-fix the test, rerun |
+  | Environment/config | Escalate to Architect with diagnostics |
+
 ### Step 5: Update Status → set QA "✅ Done"
 
 ## What You Do NOT Do

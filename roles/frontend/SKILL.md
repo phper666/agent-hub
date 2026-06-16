@@ -36,6 +36,7 @@ Only load experts relevant to your CURRENT task. Default: 1 expert.
 | UI implementation, components, styling, accessibility | Frontend Developer | `agents/agency/frontend-developer-expert.md` |
 | UI design, design system, color/typography | UI Designer | `../../designer/agents/agency/ui-designer-expert.md` |
 | Prompt optimization, LLM interaction | Prompt Engineer | `.shared/skills/prompt-engineering.md` |
+| Post-implementation quality gate | Global Consistency Review | `.shared/skills/global-consistency-review.md` |
 
 ## Input
 | File | Source | Required |

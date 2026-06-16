@@ -188,13 +188,56 @@ GET /v1/resource?page=1&limit=20&status=active
 
 ---
 
+## Task Decomposition (Critical Handoff)
+
+After architecture design is complete, produce an ordered task list so Backend and Frontend can execute without ambiguity.
+
+### Task List Template
+
+```markdown
+## Task List
+
+### Phase 1: Foundation
+| Task ID | Task | Depends On | Owner | Files | Acceptance |
+|---------|------|-----------|-------|-------|------------|
+| T001 | Project scaffolding | — | Backend or Frontend | package.json, tsconfig.json, vite.config.ts | `npm run dev` starts |
+| T002 | Type/interface definitions | T001 | Backend or Frontend | src/types/index.ts | All core types defined, no `any` |
+
+### Phase 2: Core Implementation
+| Task ID | Task | Depends On | Owner | Files | Acceptance |
+|---------|------|-----------|-------|-------|------------|
+| T003 | API service layer | T002 | Backend | src/services/api.ts | Axios/fetch client with error handling |
+| T004 | Auth endpoints | T003 | Backend | src/routes/auth.ts | Login/register/refresh return correct JWT |
+| T005 | Login UI | T002 | Frontend | src/pages/Login.tsx | Form validates, calls API, redirects on success |
+
+### Implementation Order
+```
+T001 → T002 → T003 → T004
+                  ↘ T005 (parallel with T004 after T002)
+```
+
+### Parallel Opportunities
+- After T002 (types defined): Backend T003/T004 and Frontend T005 can run concurrently
+- Mark tasks that are independent with `∦` (parallel-safe)
+```
+
+### Task Decomposition Rules
+- Each task completable in one session (≤ 5 files)
+- Explicit dependencies shown (T004 depends on T003)
+- Parallel tasks explicitly marked
+- Each task has a concrete, verifiable acceptance criterion
+- Owner column: Backend, Frontend, or Either
+
+---
+
 ## Workflow
 
 ### Step 1: Domain Discovery → Understand business domains from PRD
 ### Step 2: Architecture Design → Bounded contexts + patterns + system-architecture.md
 ### Step 3: API Design → Endpoints, contracts, error handling → api-spec.md
 ### Step 4: Tech Decisions → Stack choices with rationale → tech-stack.md + ADRs
-### Step 5: Handoff → Ensure Backend and Frontend can start implementing
+### Step 5: Task Decomposition → Ordered task list with dependencies + parallel markers
+### Step 6: Handoff → Backend and Frontend can start implementing from task list
 
 ---
 
