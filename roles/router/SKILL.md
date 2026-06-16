@@ -15,9 +15,11 @@ When activated, this skill analyzes the current context and automatically select
 If the user says any of these, use the specified role immediately:
 - "切换到 PM" / "你是产品经理" / "用 PM Agent" → **PM**
 - "切换到设计" / "你是设计师" / "用 Designer Agent" → **Designer**
+- "切换到架构" / "你是架构师" / "用 Architect Agent" → **Architect**
 - "切换到前端" / "你是前端开发" / "用 Frontend Agent" → **Frontend**
 - "切换到后端" / "你是后端开发" / "用 Backend Agent" → **Backend**
 - "切换到测试" / "你是 QA" / "用 QA Agent" → **QA**
+- "切换到交付" / "你是交付总监" / "用 Director Agent" → **Delivery Director**
 
 ### Rule 2: File Path Detection
 Based on which files the user is working with:
@@ -30,6 +32,8 @@ Based on which files the user is working with:
 | `*.go`, `*.java`, `*.py`, `src/backend/**`, `*.sql`, `*.graphql` | Backend | `roles/backend/SKILL.md` |
 | `*.test.*`, `*.spec.*`, `tests/**`, `*.e2e.*` | QA | `roles/qa/SKILL.md` |
 | `.github/workflows/*`, `Dockerfile`, `docker-compose.*` | Backend (DevOps) | `roles/backend/SKILL.md` |
+| `docs/current/architecture/*` | Architect | `roles/architect/SKILL.md` |
+| `docs/current/reports/*`, `docs/current/status.md` (only monitoring) | Delivery Director | `roles/delivery-director/SKILL.md` |
 
 ### Rule 3: Task Keyword Detection
 Based on what the user is asking to do:
@@ -40,8 +44,10 @@ Based on what the user is asking to do:
 | 原型, UI, 设计, 界面, 组件规范, 配色, 布局, 交互, 样式 | **Designer** |
 | 前端, 页面, 组件, React, Vue, CSS, 响应式, Tailwind, 路由 | **Frontend** |
 | 后端, API, 数据库, 接口, 迁移, SQL, 服务端, 认证, 中间件 | **Backend** |
+| 架构, 系统设计, API Spec, 技术选型, ADR, bounded context, 领域模型 | **Architect** |
 | 测试, bug, E2E, 集成测试, 覆盖率, 质量, 断言, mock | **QA** |
 | PR, review, 合并, 部署, CI, CD, Docker | **Backend (DevOps)** |
+| 统筹, 调度, 交付, 进度, 汇报, 风险, 里程碑 | **Delivery Director** |
 
 ### Rule 4: Project Phase Detection
 Based on what documents already exist:
@@ -49,11 +55,13 @@ Based on what documents already exist:
 ```
 No PRD exists yet                          → Suggest: PM
 PRD exists, no prototype                   → Suggest: Designer
-Prototype exists, no API spec              → Suggest: Backend (design API)
+Prototype exists, no architecture          → Suggest: Architect
+Architecture exists, no API spec           → Suggest: Architect (design API)
 API spec exists, no backend code           → Suggest: Backend (implement)
 Backend exists, no frontend code           → Suggest: Frontend
 Both exist, no tests                       → Suggest: QA
 Tests exist, no PR                         → Suggest: Create PR
+Bottleneck, need coordination              → Suggest: Delivery Director
 ```
 
 ## Multi-Role Tasks

@@ -1,0 +1,9 @@
+name: architect
+version: "1.0.0"
+description: Software Architect. Designs system architecture, API specs, and technical decisions.
+author: agent-hub
+tags:
+  - architect
+  - software-architecture
+  - agent-hub
+dependencies: [pm, designer]
