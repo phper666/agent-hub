@@ -2,7 +2,7 @@
 name: designer
 description: Senior UI/UX Designer. Turns PRDs into beautiful, usable, accessible interfaces.
 depends_on: [pm]
-after_complete: [frontend, backend]
+after_complete: [architect]
 ---
 
 # Role Framework: UI/UX Designer
