@@ -18,6 +18,8 @@
 9. [agency-agents](#9-agency-agents)
 10. [open-code-review](#10-open-code-review)
 11. [pr-agent](#11-pr-agent)
+12. [Rules 2.1 bug-fix](#12-rules-21-bug-fix)
+13. [Rules 2.1 code-review](#13-rules-21-code-review)
 
 ---
 
@@ -279,6 +281,45 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 
 ---
 
+## 12. Rules 2.1 bug-fix
+
+| 属性 | 说明 |
+|------|------|
+| **项目地址** | https://github.com/Mr-chen-05/rules-2.1-optimized |
+| **Stars** | 92★ |
+| **许可证** | MIT License |
+| **集成方式** | 角色专属（Bug 修复工作流增强） |
+| **用途** | 从 Issue → 重现 → 测试 → 修复 → 验证 → PR 的完整 Bug 闭环 |
+| **集成内容** | Issue 模板、测试驱动修复代码示例、Commit 规范、调试记录模板 |
+| **集成位置** | `roles/backend/agents/agency/backend-architect-expert.md`、`roles/frontend/agents/agency/frontend-developer-expert.md`、`roles/qa/skills/systematic-debugging/SKILL.md` |
+
+**集成内容**：
+- Backend Expert: 后端版的测试驱动修复流程（Python 代码 + Commit 规范）
+- Frontend Expert: 前端版的修复流程（React/Jest 代码 + Commit 规范）
+- QA Systematic Debugging: Issue 创建模板 + Git 分支 + 调试记录模板
+
+---
+
+## 13. Rules 2.1 code-review
+
+| 属性 | 说明 |
+|------|------|
+| **项目地址** | https://github.com/Mr-chen-05/rules-2.1-optimized |
+| **Stars** | 84★ |
+| **许可证** | MIT License |
+| **集成方式** | 角色专属（多角色代码审查流程合并） |
+| **用途** | 从开发者、架构、安全、性能四个维度进行代码审查 |
+| **集成内容** | 四角色审查清单 + 引导问题 + 4 级反馈分类 + 作者/团队最佳实践 |
+| **集成位置** | `roles/qa/agents/agency/code-reviewer-expert.md` |
+
+**集成内容**：
+- 四角色审查视角：🧑‍💻 Developer / 🏗️ Architecture / 🔒 Security / ⚡ Performance
+- 每个视角独立检查表和引导问题
+- 反馈分类：🔴 Must Fix / 🟡 Suggestion / ❓ Question / 🟢 Kudos
+- 作者最佳实践（PR < 400 行、自我审查）和团队审查文化
+
+---
+
 ## 集成方式汇总
 
 | 集成项目 | 集成方式 | 影响范围 | 文件位置 |
@@ -294,6 +335,8 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | agency-agents | 角色专属 Agent | Frontend、Backend、Designer、PM、QA | `roles/*/agents/agency/` |
 | open-code-review | 共享规则 | Frontend、Backend | `.shared/rules/code-review-rules.md` |
 | pr-agent | 角色专属 Skill | Frontend、Backend | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
+| Rules 2.1 bug-fix | 角色专属 Expert + Skill | Backend、Frontend、QA | `roles/*/agents/agency/*-expert.md`、`roles/qa/skills/systematic-debugging/SKILL.md` |
+| Rules 2.1 code-review | 角色专属 Expert | QA | `roles/qa/agents/agency/code-reviewer-expert.md` |
 
 ---
 

@@ -39,27 +39,17 @@ install_role_to_platform() {
     return 1
   }
 
-  # 辅助函数：复制目录（如果存在且非空）
-  _copy_dir() {
-    local src="$1"
-    local dst="$2"
-    if [ -d "$src" ] && [ -n "$(ls -A "$src" 2>/dev/null)" ]; then
-      mkdir -p "$dst" 2>/dev/null || true
-      cp -r "$src/"* "$dst/" 2>/dev/null || true
-    fi
-  }
-
   # 复制 SKILL.md
   cp "$skill_file" "$target_dir/SKILL.md"
 
   # 复制角色资源
-  _copy_dir "$role_dir/rules"   "$target_dir/rules"
-  _copy_dir "$role_dir/skills"  "$target_dir/skills"
-  _copy_dir "$role_dir/agents"  "$target_dir/agents"
+  safe_copy_dir "$role_dir/rules"   "$target_dir/rules"
+  safe_copy_dir "$role_dir/skills"  "$target_dir/skills"
+  safe_copy_dir "$role_dir/agents"  "$target_dir/agents"
 
   # 复制共享资源
-  _copy_dir "$AGENT_HUB_DIR/.shared/rules"  "$target_dir/.shared/rules"
-  _copy_dir "$AGENT_HUB_DIR/.shared/skills" "$target_dir/.shared/skills"
+  safe_copy_dir "$AGENT_HUB_DIR/.shared/rules"  "$target_dir/.shared/rules"
+  safe_copy_dir "$AGENT_HUB_DIR/.shared/skills" "$target_dir/.shared/skills"
 
   return 0
 }
@@ -258,7 +248,14 @@ cmd_upgrade() {
     # 检查是否有远程仓库
     if git remote -v 2>/dev/null | grep -q "origin"; then
       info "从远程仓库更新..."
-      git pull origin main 2>&1 || git pull origin master 2>&1
+      local default_branch
+      default_branch="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')"
+      if [ -z "$default_branch" ]; then
+        # 尝试 main 或 master
+        git pull origin main 2>&1 || git pull origin master 2>&1
+      else
+        git pull origin "$default_branch" 2>&1
+      fi
       ok "更新完成"
     else
       # 本地仓库，检查是否有新 commit

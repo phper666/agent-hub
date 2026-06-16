@@ -1,198 +1,198 @@
 ---
 name: systematic-debugging
-description: 遇到任何 bug、测试失败或异常行为时使用，在提出修复方案之前执行
+description: Use when encountering any bug, test failure, or unexpected behavior. Execute before proposing a fix.
 ---
 
-# 系统化调试
+# Systematic Debugging
 
-> 来源：superpowers（159k+ stars）
-> 适用于 QA、Frontend、Backend 角色
+> Source: superpowers (159k+ stars)
+> Applies to QA, Frontend, Backend roles
 
-## 概述
+## Overview
 
-随意修复既浪费时间又会引入新 bug。草率的补丁只会掩盖深层问题。
+Fixing things randomly wastes time and introduces new bugs. Hasty patches only mask deeper issues.
 
-**核心原则：** 在尝试修复之前，务必先找到根本原因。只修症状就是失败。
+**Core Principle**: Always find the root cause before attempting a fix. Fixing symptoms is failure.
 
-## 铁律
+## Iron Rule
 
-不做根因调查，不许提修复方案
+No fix proposal without root cause investigation.
 
-## 何时使用
+## When to Use
 
-用于任何技术问题：
-- 测试失败
-- 生产环境 bug
-- 异常行为
-- 性能问题
-- 构建失败
-- 集成问题
+Any technical issue:
+- Test failures
+- Production bugs
+- Unexpected behavior
+- Performance issues
+- Build failures
+- Integration problems
 
-## 四个阶段
+## Four Phases
 
-你必须完成每个阶段后才能进入下一个。
+You must complete each phase before moving to the next.
 
-### 第一阶段：根因调查
+### Phase 1: Root Cause Investigation
 
-在尝试任何修复之前：
+Before attempting any fix:
 
-1. **仔细阅读错误信息**
-   - 不要跳过错误或警告
-   - 完整阅读堆栈跟踪
-   - 记下行号、文件路径、错误码
+1. **Read the error carefully**
+   - Don't skip errors or warnings
+   - Read the full stack trace
+   - Note line numbers, file paths, error codes
 
-2. **稳定复现**
-   - 你能可靠地触发它吗？
-   - 具体的复现步骤是什么？
-   - 每次都能复现吗？
+2. **Reproduce reliably**
+   - Can you trigger it consistently?
+   - What are the exact reproduction steps?
+   - Does it reproduce every time?
 
-3. **检查近期变更**
-   - 什么变更可能导致了这个问题？
-   - git diff、最近的提交
-   - 新依赖、配置变更
+3. **Check recent changes**
+   - What change may have caused this?
+   - `git diff`, recent commits
+   - New dependencies, config changes
 
-4. **跟踪数据流**
-   - 错误值从哪里产生的？
-   - 谁用错误值调用了这里？
-   - 持续向上追踪直到找到源头
+4. **Trace the data flow**
+   - Where did the bad value originate?
+   - Who called with the bad value?
+   - Trace upstream until the root source is found
 
-### 第二阶段：模式分析
+### Phase 2: Pattern Analysis
 
-先找到模式，再修复：
+Find the pattern, then fix:
 
-1. **找到可正常工作的示例**
-2. **与参考实现对比**
-3. **识别差异**
-4. **理解依赖关系**
+1. **Find a working example**
+2. **Compare with the reference implementation**
+3. **Identify the difference**
+4. **Understand dependencies**
 
-### 第三阶段：假设与验证
+### Phase 3: Hypothesis and Verification
 
-**科学方法：**
+**Scientific method:**
 
-1. **提出单一假设**
-   - 清晰地陈述："我认为 X 是根本原因，因为 Y"
+1. **Single hypothesis**
+   - Clearly state: "I believe X is the root cause because Y"
 
-2. **最小化测试**
-   - 做出最小的改动来验证假设
-   - 每次只改一个变量
+2. **Minimal test**
+   - Make the smallest change to verify your hypothesis
+   - Change only one variable at a time
 
-3. **继续之前先验证**
-   - 生效了？是 → 进入第四阶段
-   - 没生效？提出新假设
+3. **Verify before proceeding**
+   - Worked? Yes → Go to Phase 4
+   - Didn't work? Form a new hypothesis
 
-### 第四阶段：实施
+### Phase 4: Implementation
 
-修复根本原因，而非症状：
+Fix the root cause, not the symptom:
 
-1. **创建失败的测试用例**
-   - 最简化的复现
-   - 修复前必须先有测试
+1. **Create a failing test**
+   - Minimal reproduction
+   - Must have a test before fixing
 
-2. **实施单一修复**
-   - 修复已定位的根本原因
-   - 每次只改一处
+2. **Single fix**
+   - Fix the identified root cause
+   - Change only one thing at a time
 
-3. **验证修复**
-   - 测试现在通过了吗？
-   - 其他测试没有被破坏吧？
+3. **Verify the fix**
+   - Tests passing now?
+   - No other tests broken?
 
-4. **如果 3 次以上修复都失败了：质疑架构**
-   - 停下来质疑根本性问题
-   - 应该重构架构还是继续修补症状？
+4. **If 3+ attempts fail: question the architecture**
+   - Stop and ask fundamental questions
+   - Should you refactor or keep patching?
 
-## 调试原则
+## Debugging Principles
 
-- 不猜测，调查
-- 不要同时改变多件事
-- 测量，不要假设
-- 一次一个变量
-- 写下来
-- 测试你的修复
-- 承认"我不知道"
+- Don't guess, investigate
+- Don't change multiple things at once
+- Measure, don't assume
+- One variable at a time
+- Write it down
+- Test your fix
+- Say "I don't know"
 
-## 最终检查
+## Final Check
 
-- [ ] 根本原因已被识别并记录
-- [ ] 修复针对的是根本原因，而非症状
-- [ ] 验证测试证明修复有效
-- [ ] 没有引入新问题
+- [ ] Root cause identified and documented
+- [ ] Fix addresses root cause, not symptom
+- [ ] Verification test proves fix is effective
+- [ ] No new issues introduced
 
 ---
 
-## Bug 修复闭环 (来自 Rules 2.1 bug-fix)
+## Bug Fix Closure (from Rules 2.1 bug-fix)
 
-> 将调试结果落地到 Issue → 分支 → 修复 → 验证 → 提交的完整工程流程
+> Complete workflow from investigation → Issue → branch → fix → verify → commit
 
-### 1. 创建 Issue
+### 1. Create Issue
 
 ```markdown
-**Bug标题**: [组件/模块] 简短描述性标题
+**Bug Title**: [Component/Module] Short descriptive title
 
-**环境信息**:
+**Environment**:
 - OS: [macOS 14 / Windows 11 / Ubuntu 22.04]
-- 应用版本: [v2.1.0]
-- 运行时版本: [Node 20 / Python 3.12 / Java 21]
+- App Version: [v2.1.0]
+- Runtime: [Node 20 / Python 3.12 / Java 21]
 
-**重现步骤**:
-1. [精确步骤 1]
-2. [精确步骤 2]
-3. [精确步骤 3]
+**Steps to Reproduce**:
+1. [Exact step 1]
+2. [Exact step 2]
+3. [Exact step 3]
 
-**预期行为**: [应该发生什么]
-**实际行为**: [实际发生了什么]
+**Expected**: [What should happen]
+**Actual**: [What actually happens]
 
-**错误日志**:
+**Error Log**:
 ` ` `
-[完整错误堆栈 + 关键上下文]
+[Full stack trace + key context]
 ` ` `
 
-**优先级**: High / Medium / Low
-**标签**: bug, [模块名]
+**Priority**: High / Medium / Low
+**Labels**: bug, [module]
 ```
 
-### 2. 分支与修复
+### 2. Branch and Fix
 
 ```bash
-# 从 main 切出 fix 分支
-git checkout -b fix/issue-<编号>-<简短描述>
+# Create fix branch from main
+git checkout -b fix/issue-<id>-<short-description>
 
-# 修复后运行完整测试套件
-npm test  # 或 pytest / go test ./...
+# Run full test suite after fix
+npm test  # or pytest / go test ./...
 ```
 
-### 3. 提交
+### 3. Commit
 
 ```bash
-git commit -m "🐛 fix(<scope>): <简短描述> (#<issue编号>)
+git commit -m "🐛 fix(<scope>): <short description> (#<issue-id>)
 
-- 修复: <根本原因一句话>
-- 新增: <如果有边界测试>
-- 回归检查: 全部通过
+- Fix: <root cause in one sentence>
+- Test: <new test if any>
+- Regression: All tests pass
 
-Fixes #<issue编号>"
+Fixes #<issue-id>"
 ```
 
-### 4. 调试记录模板
+### 4. Debug Log Template
 
 ```markdown
-## 调试记录: [Bug 标题]
+## Debug Log: [Bug Title]
 
-**发现时间**: YYYY-MM-DD
-**发现人**: @username
-**严重程度**: Critical / High / Medium / Low
+**Found**: YYYY-MM-DD
+**Reporter**: @username
+**Severity**: Critical / High / Medium / Low
 
-### 现象
-[用户可见的异常表现]
+### Symptom
+[User-visible abnormal behavior]
 
-### 根因
-[经过系统化调试 4 阶段后确认的根本原因]
+### Root Cause
+[Root cause confirmed after systematic 4-phase investigation]
 
-### 修复
-[最小改动方案 + 代码 diff]
+### Fix
+[Minimal change + code diff]
 
-### 验证
-- [ ] 修复后原 Bug 不再复现
-- [ ] 新增回归测试覆盖
-- [ ] 全量测试通过
-- [ ] 相关角色已确认
+### Verification
+- [ ] Bug no longer reproducible
+- [ ] Regression test added
+- [ ] Full test suite passes
+- [ ] Affected roles notified
 ```
