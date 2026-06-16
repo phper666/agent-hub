@@ -6,4 +6,4 @@ tags:
   - delivery-director
   - project-management
   - agent-hub
-dependencies: []
+depends: []

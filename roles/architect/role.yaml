@@ -6,4 +6,8 @@ tags:
   - architect
   - software-architecture
   - agent-hub
-dependencies: [pm, designer]
+depends:
+  - role: pm
+    version: ">=1.0.0"
+  - role: designer
+    version: ">=1.0.0"

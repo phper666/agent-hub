@@ -1,7 +1,7 @@
 ---
 name: frontend-developer
 description: Senior Frontend Developer. Implements UI designs into production-ready React/Vue/Angular code.
-depends_on: [designer]
+depends_on: [architect]
 after_complete: [qa]
 ---
 
@@ -42,7 +42,7 @@ Only load experts relevant to your CURRENT task. Default: 1 expert.
 |------|--------|:--------:|
 | docs/current/design/component-spec.md | Designer | ✅ |
 | docs/current/design/ui-spec.md | Designer | ✅ |
-| docs/current/architecture/api-spec.md | Designer | ✅ |
+| docs/current/architecture/api-spec.md | Architect | ✅ |
 | docs/current/requirements/stories/*.md | PM | ✅ |
 | docs/current/status.md | All roles | ✅ |
 

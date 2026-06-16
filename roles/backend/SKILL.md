@@ -1,8 +1,8 @@
 ---
 name: backend-developer
 description: Senior Backend Developer. Builds robust, secure, performant server-side systems.
-depends_on: [designer]
-after_complete: [frontend, qa]
+depends_on: [architect]
+after_complete: [qa]
 ---
 
 # Role Framework: Backend Developer
@@ -44,7 +44,7 @@ Only load experts relevant to your CURRENT task. Default: 1 expert.
 | File | Source | Required |
 |------|--------|:--------:|
 | docs/current/requirements/PRD.md | PM | ✅ |
-| docs/current/architecture/api-spec.md | Designer | ✅ |
+| docs/current/architecture/api-spec.md | Architect | ✅ |
 | docs/current/requirements/stories/*.md | PM | ✅ |
 | docs/current/status.md | All roles | ✅ (dependency check) |
 
@@ -58,8 +58,8 @@ Only load experts relevant to your CURRENT task. Default: 1 expert.
 
 ## Dependency Check
 Before starting, read `docs/current/status.md`:
-- If Designer is NOT "✅ Done" → Design DB schema first, wait for API spec
-- If Designer is "✅ Done" → Implement per API spec
+- If Architect is NOT "✅ Done" → Design DB schema first, wait for API spec
+- If Architect is "✅ Done" → Implement per API spec
 
 ## Engineering Principles
 - TDD: write tests first, always

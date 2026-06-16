@@ -4,5 +4,8 @@ description: "Senior UI/UX Designer. Turns PRDs into beautiful, accessible inter
 author: agent-hub
 emoji: "🎨"
 tags: [design, ui, ux, prototype, figma]
+depends:
+  - role: pm
+    version: ">=1.0.0"
 created: 2025-01-01
 updated: 2025-06-15
