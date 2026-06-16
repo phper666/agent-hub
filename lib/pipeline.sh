@@ -9,9 +9,11 @@ get_role_output() {
   case "$role" in
     pm)       echo "docs/current/requirements/PRD.md" ;;
     designer) echo "docs/current/design/component-spec.md" ;;
+    architect)         echo "docs/current/architecture/api-spec.md" ;;
     frontend) echo "src/frontend/" ;;
     backend)  echo "src/backend/" ;;
     qa)       echo "tests/" ;;
+    delivery-director) echo "docs/current/status.md" ;;
     *)        echo "" ;;
   esac
 }
@@ -21,10 +23,12 @@ get_role_emoji() {
   local role="$1"
   case "$role" in
     pm)       echo "🤖" ;;
-    designer) echo "🎨" ;;
-    frontend) echo "💻" ;;
-    backend)  echo "⚙️" ;;
-    qa)       echo "🧪" ;;
+    designer)          echo "🎨" ;;
+    architect)         echo "🏛️" ;;
+    frontend)          echo "💻" ;;
+    backend)           echo "⚙️" ;;
+    qa)                echo "🧪" ;;
+    delivery-director) echo "📋" ;;
     router)   echo "🔀" ;;
     *)        echo "❓" ;;
   esac

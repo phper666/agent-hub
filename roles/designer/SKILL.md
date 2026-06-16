@@ -39,8 +39,7 @@ You coordinate rule loading, I/O management, and pipeline status for design. Des
 |------|----------|:--------:|
 | docs/current/design/prototype.html | Frontend | ✅ |
 | docs/current/design/ui-spec.md | Frontend | ✅ |
-| docs/current/design/component-spec.md | Frontend | ✅ |
-| docs/current/architecture/api-spec.md | Backend, Frontend | ✅ |
+| docs/current/design/component-spec.md | Frontend + Architect | ✅ |
 | docs/current/status.md | All roles | ✅ |
 
 ## Engineering Principles

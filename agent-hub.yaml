@@ -1,14 +1,16 @@
 # Agent Hub 项目配置
-version: "2.2.0"
+version: "2.3.0"
 
 # 角色列表
 roles:
   - pm
   - designer
+  - architect
   - frontend
   - backend
   - qa
   - router
+  - delivery-director
 
 # 全局规则文件
 shared_rules:
