@@ -30,7 +30,7 @@ Agent Hub 是一个 AI 角色包管理器，让你一次定义角色，即可安
 - 🔍 **自动检测平台** — 自动扫描本地已安装的 AI Agent 平台，无需手动配置
 - 📦 **一键安装角色** — 将角色同时部署到所有已检测平台的正确目录
 - 🎯 **项目级 / 全局安装** — 支持仅当前项目生效或所有项目共享两种模式
-- 🎭 **5 个内置角色 + 8 个领域专家** — 产品经理、设计师、前端、后端、测试、路由角色 + 专家知识注入
+- 🎭 **8 个内置角色 + 13 个领域专家** — 产品经理、设计师、架构师、前端、后端、测试、交付总监、路由角色 + 专家知识注入
 - 📐 **6 套共享规则** — Git 规范、质量标准、安全编码、精简输出、代码规范、代码审查自动注入所有角色
 - 🔌 **集成 13+ 个开源项目** — 深度集成 markitdown、agency-agents、Rules 2.1、ECC、taste-skill、headroom、harness、supermemory、spec-kit、open-code-review、pr-agent
 - 🏭 **领域模板生成** — 支持 10 个领域（Web、Mobile、Data、API、ML、DevOps 等）一键生成角色配置
@@ -275,6 +275,7 @@ roles/<角色名>/
 | `security-rules.md` | 安全编码规范、输入校验、认证授权、数据保护、API 安全 | 原创 |
 | `output-rules.md` | 输出格式规范、简洁原则、状态标记、Token 优化技巧 | 基于 [headroom](https://github.com/chopratejas/headroom) |
 | `code-standards.md` | KISS/DRY/YAGNI 原则、文件组织、错误处理、命名约定、测试要求（TDD） | 基于 [ECC](https://github.com/affaan-m/ECC) |
+| `code-review-rules.md` | 代码审查规范、四层优先级链、路径过滤系统、结构化审查输出 | 基于 [open-code-review](https://github.com/alibaba/open-code-review) |
 
 > 共享规则位于 `.shared/rules/` 目录，优先级低于角色专属规则。
 
