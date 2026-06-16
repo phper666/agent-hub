@@ -191,7 +191,17 @@ cmd_role() {
     edit)   cmd_role_edit "$@" ;;
     delete) cmd_role_delete "$@" ;;
     info)   cmd_role_info "$@" ;;
-    *)      fail "未知子命令: role $subcmd。可用: list/create/edit/delete/info" ;;
+    help|--help|-h)
+      echo "用法: agent-hub role <子命令>"
+      echo ""
+      echo "可用子命令:"
+      echo "  list               列出所有角色"
+      echo "  create <name>      创建角色模板"
+      echo "  edit <name>        用编辑器打开角色 SKILL.md"
+      echo "  delete <name>      删除角色"
+      echo "  info <name>        查看角色详情"
+      ;;
+    *)      fail "未知子命令: role $subcmd。运行 'agent-hub role help' 查看帮助" ;;
   esac
 }
 
