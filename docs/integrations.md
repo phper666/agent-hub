@@ -20,6 +20,8 @@
 11. [pr-agent](#11-pr-agent)
 12. [Rules 2.1 bug-fix](#12-rules-21-bug-fix)
 13. [Rules 2.1 code-review](#13-rules-21-code-review)
+14. [superpowers dispatch](#14-superpowers-dispatch)
+15. [WorkBuddy IS_PASS](#15-workbuddy-is_pass)
 
 ---
 
@@ -337,6 +339,34 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | pr-agent | 角色专属 Skill | Frontend、Backend | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
 | Rules 2.1 bug-fix | 角色专属 Expert + Skill | Backend、Frontend、QA | `roles/*/agents/agency/*-expert.md`、`roles/qa/skills/systematic-debugging/SKILL.md` |
 | Rules 2.1 code-review | 角色专属 Expert | QA | `roles/qa/agents/agency/code-reviewer-expert.md` |
+| superpowers dispatch | 角色专属 | Delivery Director | `roles/delivery-director/agents/agency/dispatch-protocol.md` |
+| WorkBuddy IS_PASS | 共享技能 | Backend、Frontend | `.shared/skills/global-consistency-review.md` |
+
+---
+
+## 14. superpowers dispatch
+
+| 属性 | 说明 |
+|------|------|
+| **项目地址** | https://github.com/obra/superpowers |
+| **Stars** | 159k+ |
+| **许可证** | MIT License |
+| **集成方式** | 角色专属（Subagent 并行调度协议） |
+| **用途** | 识别独立任务域 → 构建聚焦 subagent prompt → 并行分发 → 收集集成 |
+| **集成位置** | `roles/delivery-director/agents/agency/dispatch-protocol.md` |
+
+---
+
+## 15. WorkBuddy IS_PASS
+
+| 属性 | 说明 |
+|------|------|
+| **来源** | WorkBuddy Software Engineer IS_PASS pattern |
+| **集成方式** | 共享技能（全局一致性自检） |
+| **用途** | 批量实现完成后执行 8 项跨文件一致性检查 |
+| **集成位置** | `.shared/skills/global-consistency-review.md` |
+
+**8 项检查**：Imports resolve / Types consistent / Naming consistent / API contracts match / Error handling uniform / State flows correctly / File structure per design / Dependencies declared
 
 ---
 

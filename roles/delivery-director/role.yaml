@@ -1,0 +1,9 @@
+name: delivery-director
+version: "1.0.0"
+description: Delivery Director. Single point of contact for the CEO. Orchestrates the entire expert team.
+author: agent-hub
+tags:
+  - delivery-director
+  - project-management
+  - agent-hub
+depends: []

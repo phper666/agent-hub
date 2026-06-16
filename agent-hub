@@ -135,19 +135,21 @@ EOF
     ok "创建 agent-hub.yaml"
   fi
 
-  # 创建 status.md
+  # 创建 status.md (动态生成，基于 roles/ 目录)
   if [ ! -f "docs/current/status.md" ]; then
-    cat > docs/current/status.md << 'EOF'
-# Project Status
-
-| Role | Status | Updated |
-|------|--------|---------|
-| PM | ⏳ Pending | - |
-| Designer | ⏳ Pending | - |
-| Frontend | ⏳ Pending | - |
-| Backend | ⏳ Pending | - |
-| QA | ⏳ Pending | - |
-EOF
+    {
+      echo "# 项目状态"
+      echo ""
+      echo "| 角色 | 状态 | 更新时间 |"
+      echo "|------|------|----------|"
+      for role_dir in roles/*/; do
+        [ -d "$role_dir" ] || continue
+        local role="$(basename "$role_dir")"
+        local first_char="${role:0:1}"
+        local capitalized="${first_char^^}${role:1}"
+        echo "| $capitalized | ⏳ 待开始 | - |"
+      done
+    } > docs/current/status.md
     ok "创建 docs/current/status.md"
   fi
 
