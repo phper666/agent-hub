@@ -30,9 +30,9 @@ Agent Hub 是一个 AI 角色包管理器，让你一次定义角色，即可安
 - 🔍 **自动检测平台** — 自动扫描本地已安装的 AI Agent 平台，无需手动配置
 - 📦 **一键安装角色** — 将角色同时部署到所有已检测平台的正确目录
 - 🎯 **项目级 / 全局安装** — 支持仅当前项目生效或所有项目共享两种模式
-- 🎭 **6 个内置角色** — 开箱即用的产品经理、设计师、前端、后端、测试、路由角色
-- 📐 **4 套共享规则** — Git 规范、质量标准、安全编码、输出格式自动注入所有角色
-- 🔌 **集成 6 个开源项目** — 深度集成 markitdown、ECC、taste-skill、headroom、harness、supermemory
+- 🎭 **5 个内置角色 + 8 个领域专家** — 产品经理、设计师、前端、后端、测试、路由角色 + 专家知识注入
+- 📐 **6 套共享规则** — Git 规范、质量标准、安全编码、精简输出、代码规范、代码审查自动注入所有角色
+- 🔌 **集成 13+ 个开源项目** — 深度集成 markitdown、agency-agents、Rules 2.1、ECC、taste-skill、headroom、harness、supermemory、spec-kit、open-code-review、pr-agent
 - 🏭 **领域模板生成** — 支持 10 个领域（Web、Mobile、Data、API、ML、DevOps 等）一键生成角色配置
 - 📤 **导入 / 导出** — 支持从其他项目导入角色，或导出角色为 YAML 分享
 - 🔄 **流水线状态** — 追踪各角色的工作完成状态
@@ -228,23 +228,36 @@ agent-hub help                      # 显示帮助
 
 ## 内置角色
 
-| 角色 | Emoji | 描述 | 子角色 |
-|------|-------|------|--------|
-| **pm** | 🤖 | 产品经理 — 需求分析、PRD、用户故事、产品规划 | — |
-| **designer** | 🎨 | UI/UX 设计师 — 界面设计、原型、组件规范、设计系统 | `ui-designer` |
-| **frontend** | 💻 | 前端工程师 — React/Vue/Angular 组件、页面、状态管理 | `frontend-developer` |
-| **backend** | ⚙️ | 后端工程师 — API、数据库、服务端、认证、迁移 | `backend-architect`、`database-optimizer` |
-| **qa** | 🧪 | 测试工程师 — 测试计划、集成测试、E2E 测试、质量保障 | `code-reviewer` |
-| **router** | 🔀 | 角色路由 — 根据文件路径、任务关键词、项目阶段自动检测并切换角色 | — |
+### 两层架构
+
+Agent Hub 采用 **角色框架 (SKILL.md) + 领域专家 (Expert)** 的两层架构：
+
+- **SKILL.md** — 工程框架，负责加载顺序、输入/输出定义、Dependency Check、状态更新
+- **Expert** — 领域知识，负责身份定义、核心能力、代码示例、技术深度
+
+### 角色一览
+
+| 角色 | Emoji | 描述 | 关联 Expert |
+|------|-------|------|-------------|
+| **pm** | 🤖 | 产品经理 — 需求分析、PRD、用户故事 | `product-manager-expert` |
+| **designer** | 🎨 | UI/UX 设计师 — 界面、原型、设计系统 | `ui-designer-expert`、`ux-researcher-expert` |
+| **frontend** | 💻 | 前端工程师 — React/Vue/Angular、状态管理 | `frontend-developer-expert` |
+| **backend** | ⚙️ | 后端工程师 — API、数据库、服务端 | `backend-architect-expert`、`database-optimizer-expert` |
+| **qa** | 🧪 | 测试工程师 — 测试计划、质量保障 | `code-reviewer-expert`、`security-engineer-expert` |
+| **router** | 🔀 | 角色路由 — 根据路径/关键词自动切换 | — |
 
 每个角色包含：
 
 ```
 roles/<角色名>/
-├── SKILL.md              # 角色人设、工作流、输入/输出定义
-├── role.yaml             # 角色元数据配置
-├── rules/                # 角色专属规则（可选）
-└── agents/               # 子角色定义（可选）
+├── SKILL.md                  # 角色框架（工程流程协调）
+├── role.yaml                 # 角色元数据
+├── agents/agency/
+│   ├── <角色名>-expert.md    # 领域专家（技术深度）
+│   └── ...  
+├── rules/                    # 角色专属规则（可选）
+├── skills/                   # 角色专属技能（可选）
+└── agents/                   # 其他子角色（可选）
 ```
 
 ---
@@ -268,7 +281,7 @@ roles/<角色名>/
 
 ## 集成项目
 
-Agent Hub 集成了 11 个高质量开源项目，增强角色能力。所有集成项目版权归原作者所有，Agent Hub 仅作集成使用。
+Agent Hub 集成了 13+ 个高质量开源项目，增强角色能力。所有集成项目版权归原作者所有，Agent Hub 仅作集成使用。
 
 > 📖 **详细说明请参考 [docs/integrations.md](docs/integrations.md)**
 
@@ -287,6 +300,8 @@ Agent Hub 集成了 11 个高质量开源项目，增强角色能力。所有集
 | 9 | [agency-agents](https://github.com/msitarzewski/agency-agents) | 113k | 角色专属 Agent | Frontend、Backend、Designer、PM、QA | `roles/*/agents/agency/` |
 | 10 | [open-code-review](https://github.com/alibaba/open-code-review) | 7.2k | 共享规则 | Frontend、Backend | `.shared/rules/code-review-rules.md` |
 | 11 | [pr-agent](https://github.com/The-PR-Agent/pr-agent) | 11.6k | 角色专属 | Frontend、Backend | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
+| 12 | [Rules 2.1 bug-fix](https://github.com/Mr-chen-05/rules-2.1-optimized) | 92★ | 角色专属 | Backend、Frontend、QA | `roles/{backend,frontend}/agents/agency/*-expert.md`、`roles/qa/skills/systematic-debugging/SKILL.md` |
+| 13 | [Rules 2.1 code-review](https://github.com/Mr-chen-05/rules-2.1-optimized) | 84★ | 角色专属 | QA | `roles/qa/agents/agency/code-reviewer-expert.md` |
 
 ### 协同工作流
 

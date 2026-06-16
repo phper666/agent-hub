@@ -258,7 +258,14 @@ cmd_upgrade() {
     # 检查是否有远程仓库
     if git remote -v 2>/dev/null | grep -q "origin"; then
       info "从远程仓库更新..."
-      git pull origin main 2>&1 || git pull origin master 2>&1
+      local default_branch
+      default_branch="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')"
+      if [ -z "$default_branch" ]; then
+        # 尝试 main 或 master
+        git pull origin main 2>&1 || git pull origin master 2>&1
+      else
+        git pull origin "$default_branch" 2>&1
+      fi
       ok "更新完成"
     else
       # 本地仓库，检查是否有新 commit
