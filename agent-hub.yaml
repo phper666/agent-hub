@@ -1,5 +1,5 @@
 # Agent Hub 项目配置
-version: "2.1.0"
+version: "2.2.0"
 
 # 角色列表
 roles:

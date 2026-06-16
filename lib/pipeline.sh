@@ -30,47 +30,39 @@ get_role_emoji() {
   esac
 }
 
+# 从 SKILL.md frontmatter 提取 depends_on
+get_role_deps() {
+  local role="$1"
+  local skill_file="roles/$role/SKILL.md"
+  if [ -f "$skill_file" ]; then
+    grep "^depends_on:" "$skill_file" 2>/dev/null | head -1 | sed 's/^depends_on: *\[//' | sed 's/\] *$//' | sed 's/, */ /g'
+  fi
+}
+
 # 获取角色状态
 get_role_status() {
   local role="$1"
   local status_file="docs/current/status.md"
+  if [ ! -f "$status_file" ]; then echo "⏳ 待开始"; return; fi
 
-  if [ ! -f "$status_file" ]; then
-    echo "⏳ 待开始"
-    return
-  fi
-
-  # 从 status.md 解析状态
   local line
   line="$(grep -i "$role" "$status_file" 2>/dev/null | head -1)"
-  if [ -z "$line" ]; then
-    echo "⏳ 待开始"
-    return
-  fi
+  if [ -z "$line" ]; then echo "⏳ 待开始"; return; fi
 
-  if echo "$line" | grep -q "✅"; then
-    echo "✅ 完成"
-  elif echo "$line" | grep -q "🔄"; then
-    echo "🔄 进行中"
-  else
-    echo "⏳ 待开始"
-  fi
+  if echo "$line" | grep -q "✅"; then echo "✅ 完成"
+  elif echo "$line" | grep -q "🔄"; then echo "🔄 进行中"
+  else echo "⏳ 待开始"; fi
 }
 
 # 获取角色显示名称
 get_role_display_name() {
   local name="$1"
-  # 从 SKILL.md frontmatter 提取，fallback 用目录名
   local skill_file="roles/$name/SKILL.md"
   if [ -f "$skill_file" ]; then
-    local extracted
-    extracted="$(grep "^description:" "$skill_file" 2>/dev/null | head -1 | sed 's/^description:[[:space:]]*//' | cut -d'.' -f1)"
-    if [ -n "$extracted" ]; then
-      echo "$extracted"
-      return
-    fi
+    grep "^description:" "$skill_file" 2>/dev/null | head -1 | sed 's/^description:[[:space:]]*//' | cut -d'.' -f1
+  else
+    echo "$name"
   fi
-  echo "$name"
 }
 
 # 管线状态
@@ -79,30 +71,21 @@ cmd_pipeline_status() {
   echo -e "${CYAN}📊 项目流水线状态${NC}"
   echo ""
 
-  printf "  %-5s %-15s %-12s %-30s\n" "" "角色" "状态" "产出"
-  printf "  %-5s %-15s %-12s %-30s\n" "───" "───────────────" "────────────" "──────────────────────────────"
+  printf "  %-5s %-15s %-12s %-18s %s\n" "" "角色" "状态" "依赖" "产出"
+  printf "  %-5s %-15s %-12s %-18s %s\n" "───" "───────────────" "────────────" "──────────────────" "──────────────────────────────"
 
-  # 动态发现角色
   for role_dir in roles/*/; do
     [ -d "$role_dir" ] || continue
     local role
     role="$(basename "$role_dir")"
-    local emoji
-    emoji="$(get_role_emoji "$role")"
-    local status
-    status="$(get_role_status "$role")"
-    local output
-    output="$(get_role_output "$role")"
+    local emoji="$(get_role_emoji "$role")"
+    local status="$(get_role_status "$role")"
+    local deps="$(get_role_deps "$role")"
+    [ -z "$deps" ] && deps="-"
+    local output="$(get_role_output "$role")"
+    [ -n "$output" ] && [ -e "$output" ] && output="$output ✓"
 
-    # 检查产出文件是否存在
-    if [ -n "$output" ] && [ -e "$output" ]; then
-      output="$output ✓"
-    fi
-
-    local display_name
-    display_name="$(get_role_display_name "$role")"
-
-    printf "  %-5s %-15s %-12s %-30s\n" "$emoji" "$role" "$status" "$output"
+    printf "  %-5s %-15s %-12s %-18s %s\n" "$emoji" "$role" "$status" "$deps" "$output"
   done
 
   echo ""
@@ -111,10 +94,8 @@ cmd_pipeline_status() {
 # 重置状态
 cmd_pipeline_reset() {
   local status_file="docs/current/status.md"
-
   mkdir -p "$(dirname "$status_file")"
 
-  # 动态生成表头
   {
     echo "# 项目状态"
     echo ""
@@ -122,9 +103,7 @@ cmd_pipeline_reset() {
     echo "|------|------|----------|"
     for role_dir in roles/*/; do
       [ -d "$role_dir" ] || continue
-      local role
-      role="$(basename "$role_dir")"
-      # 首字母大写（兼容 macOS/Linux）
+      local role="$(basename "$role_dir")"
       local first_char="${role:0:1}"
       local capitalized="${first_char^^}${role:1}"
       echo "| $capitalized | ⏳ 待开始 | - |"
