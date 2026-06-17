@@ -22,6 +22,7 @@
 13. [Rules 2.1 code-review](#13-rules-21-code-review)
 14. [superpowers dispatch](#14-superpowers-dispatch)
 15. [WorkBuddy IS_PASS](#15-workbuddy-is_pass)
+16. [CodeGraph + code-review-graph](#16-code-intelligence-codegraph--code-review-graph)
 
 ---
 
@@ -60,21 +61,21 @@ pip install markitdown
 | **集成方式** | 按角色独立集成（每个角色有自己的 skills 目录） |
 | **用途** | AI 编程工作流方法论，提供系统化的开发最佳实践 |
 | **集成内容** | 4 个核心 skills：test-driven-development（TDD）、systematic-debugging（系统化调试）、verification-before-completion（完成前验证）、subagent-driven-development（子 Agent 驱动开发） |
-| **集成位置** | `roles/<role>/skills/`（按角色独立组织） |
+| **集成位置** | `.shared/skills/`（已从按角色独立组织迁移为共享技能） |
 
-**按角色分配**：
+**按角色分配**（已从 per-role 迁移到 `.shared/skills/`）：
 
-| 角色 | 集成的 Skills |
-|------|--------------|
+| 角色 | 集成的 Skills（共享） |
+|------|----------------------|
 | **Designer** | — |
 | **Frontend** | test-driven-development, subagent-driven-development, systematic-debugging |
 | **Backend** | test-driven-development, subagent-driven-development, systematic-debugging |
-| **QA** | test-driven-development, systematic-debugging, verification-before-completion |
+| **QA** | test-driven-development, systematic-debugging, verification-before-completion（仅 QA 保留在 `roles/qa/skills/`） |
 
 **设计理念**：
-- 每个角色只加载自己需要的 skills
-- 避免所有角色共享同一套 skills（减少上下文污染）
-- 按职责分离，提高专业性
+- Skills 已从按角色独立拷贝迁移为 `.shared/skills/` 共享管理
+- 安装时由 `install.sh` 一次性复制到所有角色
+- `## When to Load This Skill` 表按角色+任务域门控激活
 
 ---
 
@@ -148,10 +149,10 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **项目地址** | https://github.com/supermemoryai/supermemory |
 | **Stars** | 27k+ |
 | **许可证** | MIT License |
-| **集成方式** | 共享技能（`memory-guide.md`） |
+| **集成方式** | 共享技能（`memory-guide/`） |
 | **用途** | 记忆管理指南，让 AI 在对话间保持记忆，构建持久化上下文 |
 | **集成内容** | 记忆类型定义（静态事实 / 动态上下文 / 项目上下文）、记忆管理原则（自动提取、时间感知、自动遗忘、矛盾解决）、实践指南（会话开始/中/结束）、记忆存储格式（Markdown / YAML）、MCP Server / API 工具推荐 |
-| **集成位置** | `.shared/skills/memory-guide.md` |
+| **集成位置** | `.shared/skills/memory-guide/` |
 
 ---
 
@@ -257,11 +258,11 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **项目地址** | https://github.com/The-PR-Agent/pr-agent |
 | **Stars** | 11.6k+ |
 | **许可证** | Apache-2.0 License |
-| **集成方式** | 角色专属 Skill（PR 审查技能） |
+| **集成方式** | GitHub Actions（PR 触发，不在角色 Core 中加载，零 token 开销） |
 | **用途** | AI 驱动的 PR 审查 Agent，自动化 PR 描述生成、代码审查、改进建议 |
 | **集成内容** | 核心工具（/describe、/review、/improve、/ask、/update_changelog）、CI/CD 集成、审查报告模板 |
-| **集成位置** | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
-| **适用角色** | Frontend、Backend（开发者互相审查 PR） |
+| **集成位置** | `.shared/skills/pr-review/SKILL.md` + GitHub Actions 配置参考 `docs/github-actions/pr-review.yml.md` |
+| **适用场景** | PR 创建时自动触发；本地手动审查时可对 QA 角色临时加载 |
 
 **核心工具**：
 
@@ -293,12 +294,12 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **集成方式** | 角色专属（Bug 修复工作流增强） |
 | **用途** | 从 Issue → 重现 → 测试 → 修复 → 验证 → PR 的完整 Bug 闭环 |
 | **集成内容** | Issue 模板、测试驱动修复代码示例、Commit 规范、调试记录模板 |
-| **集成位置** | `roles/backend/agents/agency/backend-architect-expert.md`、`roles/frontend/agents/agency/frontend-developer-expert.md`、`roles/qa/skills/systematic-debugging/SKILL.md` |
+| **集成位置** | `roles/backend/agents/agency/backend-architect-expert.md`、`roles/frontend/agents/agency/frontend-developer-expert.md`、`.shared/skills/systematic-debugging/SKILL.md` |
 
 **集成内容**：
 - Backend Expert: 后端版的测试驱动修复流程（Python 代码 + Commit 规范）
 - Frontend Expert: 前端版的修复流程（React/Jest 代码 + Commit 规范）
-- QA Systematic Debugging: Issue 创建模板 + Git 分支 + 调试记录模板
+- QA Systematic Debugging: Issue 创建模板 + Git 分支 + 调试记录模板（位于 `.shared/skills/systematic-debugging/`）
 
 ---
 
@@ -327,20 +328,21 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | 集成项目 | 集成方式 | 影响范围 | 文件位置 |
 |---------|---------|---------|---------|
 | markitdown | 必备工具 | 所有角色 | `roles/*/SKILL.md` |
-| superpowers | 按角色独立集成 | Designer、Frontend、Backend、QA | `roles/<role>/skills/` |
+| superpowers | 共享技能 | Designer、Frontend、Backend、QA | `.shared/skills/` |
 | ECC | 共享规则 | 所有角色 | `.shared/rules/code-standards.md` |
 | taste-skill | 角色专属规范 | Designer、Frontend | `roles/designer/SKILL.md`、`roles/frontend/SKILL.md` |
 | headroom | 共享规则 | 所有角色 | `.shared/rules/output-rules.md` |
 | harness | CLI 命令 | 新角色生成 | `lib/generate.sh` |
-| supermemory | 共享技能 | 所有角色 | `.shared/skills/memory-guide.md` |
+| supermemory | 共享技能 | 所有角色 | `.shared/skills/memory-guide/` |
 | spec-kit | 共享技能 | 所有角色 | `.shared/skills/spec-driven-development/SKILL.md` |
 | agency-agents | 角色专属 Agent | Frontend、Backend、Designer、PM、QA | `roles/*/agents/agency/` |
 | open-code-review | 共享规则 | Frontend、Backend | `.shared/rules/code-review-rules.md` |
-| pr-agent | 角色专属 Skill | Frontend、Backend | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
-| Rules 2.1 bug-fix | 角色专属 Expert + Skill | Backend、Frontend、QA | `roles/*/agents/agency/*-expert.md`、`roles/qa/skills/systematic-debugging/SKILL.md` |
+| pr-agent | GitHub Actions | Frontend、Backend（CI 触发） | `.shared/skills/pr-review/SKILL.md` |
+| Rules 2.1 bug-fix | 角色专属 Expert + 共享 Skill | Backend、Frontend、QA | `roles/*/agents/agency/*-expert.md`、`.shared/skills/systematic-debugging/SKILL.md` |
 | Rules 2.1 code-review | 角色专属 Expert | QA | `roles/qa/agents/agency/code-reviewer-expert.md` |
 | superpowers dispatch | 角色专属 | Delivery Director | `roles/delivery-director/agents/agency/dispatch-protocol.md` |
 | WorkBuddy IS_PASS | 共享技能 | Backend、Frontend | `.shared/skills/global-consistency-review.md` |
+| CodeGraph + code-review-graph | 共享技能 + 外部 MCP | 所有角色（仅 QA 用 crg） | `.shared/skills/code-intelligence/SKILL.md` |
 
 ---
 
@@ -367,6 +369,60 @@ agent-hub generate mobile    # 生成移动端开发领域的角色配置
 | **集成位置** | `.shared/skills/global-consistency-review.md` |
 
 **8 项检查**：Imports resolve / Types consistent / Naming consistent / API contracts match / Error handling uniform / State flows correctly / File structure per design / Dependencies declared
+
+---
+
+## 16. Code Intelligence (CodeGraph + code-review-graph)
+
+| 属性 | 说明 |
+|------|------|
+| **项目地址** | [CodeGraph](https://github.com/colbymchenry/codegraph) (50.7k⭐) + [code-review-graph](https://github.com/tirth8205/code-review-graph) (18.6k⭐) |
+| **许可证** | 均为 MIT License |
+| **集成方式** | 共享技能（最佳实践指南，指导 AI 安装和使用两个外部 MCP 工具） |
+| **用途** | CodeGraph：日常代码感知（调用链追踪、框架路由、自动同步）；code-review-graph：深度 PR 审查（影响半径、风险评分、社区检测） |
+| **集成位置** | `.shared/skills/code-intelligence/SKILL.md` |
+
+### 设计哲学
+
+两个工具互补，不在同一层竞争：
+
+- **CodeGraph** — 4 个 MCP 工具，零配置自动同步，回答「这个代码怎么工作的」
+- **code-review-graph** — 30 个 MCP 工具，回答「改这个会有什么后果」
+
+### 安装方式
+
+本 skill 提供 AI 可执行的安装命令。用户对 AI 说「帮我安装 CodeGraph 和 code-review-graph」，AI 自动完成：
+
+```bash
+# CodeGraph
+curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh
+codegraph install && cd <project> && codegraph init
+
+# code-review-graph
+pip install code-review-graph
+code-review-graph install && cd <project> && code-review-graph build
+```
+
+### 角色分工
+
+| 角色 | CodeGraph | code-review-graph |
+|------|:---:|:---:|
+| Architect | ✅ 日常主力 | ⚠️ 深度审计时偶尔用 |
+| Backend / Frontend | ✅ 日常主力 | ❌ 审查交给 QA |
+| QA | ✅ 定位测试文件 | ✅ **审查核心引擎** |
+| PM / Designer / Router / DD | ❌ | ❌ |
+
+### 与现有审查集成的协同
+
+code-review-graph 不替代 open-code-review、pr-agent 或 Rules 2.1——它填补的是「结构分析」层：
+
+```
+PR 审查四层：
+  Layer 1: open-code-review → 检查清单（查什么）
+  Layer 2: code-review-graph → 结构分析（改了会怎样）
+  Layer 3: Rules 2.1 → 多视角审查（怎么想）
+  Layer 4: pr-agent → 工作流交付（怎么交）
+```
 
 ---
 

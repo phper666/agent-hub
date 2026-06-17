@@ -1,7 +1,7 @@
 # 代码审查规范（基于 open-code-review 7.2k stars）
 
 > 来源：https://github.com/alibaba/open-code-review
-> 适用于 QA 角色
+> 适用于所有角色（代码审查由 QA 角色主导执行）
 
 ## 概述
 

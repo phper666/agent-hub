@@ -1,9 +1,26 @@
 ---
 name: role-router
 description: Auto-detect which agent role to activate based on file paths, task keywords, and project phase. Use at the start of every session or when the user's task is ambiguous.
+depends_on: []
+after_complete: []
 ---
 
 # 🤖 Auto-Detection Role Router
+
+## Core Loading Order (Always Loaded)
+1. `.shared/rules/git-rules.md` — Git conventions
+2. `.shared/rules/quality-rules.md` — Quality standards
+3. `.shared/rules/security-rules.md` — Security standards
+4. `.shared/rules/output-rules.md` — Concise output (headroom)
+5. This file
+
+## Expert Selection Guide (Context-Dependent)
+
+| Task Domain | Load | File |
+|------------|------|------|
+| Role routing and detection | Router (this file) | — |
+
+> Router is a lightweight routing role. It does not load heavy expert files — its job is to detect context and delegate to the correct role.
 
 ## How It Works
 
@@ -77,14 +94,75 @@ Example: "实现用户登录功能"
 - Dependent: Frontend (build login form) → QA (write tests)
 - Order: Backend → Frontend → QA
 
+## Self-Evaluation (可选)
+任务完成后，将简要自评写入 `docs/current/feedback/router-self-eval.md`：
+
+```markdown
+# Router 自评 — {任务} — {日期}
+
+## 做得好的地方
+- [列出有启发的规则/技能]
+
+## 可改进的地方
+- [列出不适用的规则]
+- [列出知识盲区]
+- [列出流程卡点]
+
+## 建议
+- [对 SKILL.md 的具体改进建议]
+```
+
+## Input
+| Input | Source | Required |
+|-------|--------|:--------:|
+| User message / conversation context | User | ✅ |
+| Current project files (for path detection) | Filesystem | ⚠️ (if available) |
+| `docs/current/status.md` | All roles | ⚠️ (for phase detection) |
+
 ## Output
+| Output | Consumer | Required |
+|--------|----------|:--------:|
+| Selected role announcement | User | ✅ |
+| Role-specific SKILL.md loaded | AI Agent | ✅ |
+| Active rules list | User (informational) | ✅ |
 
 When a role is selected:
 1. Load the role's `SKILL.md`
 2. Apply all shared rules from `.shared/rules/`
-3. Announce the role: "🤖 已切换到 **Backend Developer** 角色"
+3. Announce the role: "🤖 已切换到 **[Role Name]** 角色"
 4. List active rules: "📋 已加载规则: git-rules.md, quality-rules.md, security-rules.md, output-rules.md"
 5. Begin executing the task
+
+## Engineering Principles
+- Detect, don't guess — use file paths and keywords, not assumptions
+- Delegate completely — once a role is selected, fully hand off
+- Stay lightweight — Router exists only to route, not to execute
+- If ambiguous, ask the user which role they want
+
+## What You Do NOT Do
+- No role execution — you are a dispatcher, not a worker
+- No code generation or file modification
+- No analysis beyond role detection
+- No overriding user's explicit role choice
+
+## 团队沟通协议
+
+| 情况 | 行动 |
+|-----------|--------|
+| **阻塞** | 更新 `docs/current/status.md`，标记为 ❌ 阻塞并注明原因 |
+| **上游输出有问题** | 将发现写入 `docs/current/feedback/router-feedback.md` |
+| **任务完成** | 更新 `docs/current/status.md`，标记为 ✅ 完成并注明输出路径 |
+| **角色间交接** | 开始前检查 `docs/current/feedback/` 了解已知问题 |
+
+## 错误处理
+
+| 异常 | 处理方式 |
+|-----------|----------|
+| **所需输入文件缺失** | ❌ 停止并报告："缺少 [file]，等待 [上游角色]" |
+| **输入文件存在但为空** | ⚠️ 停止并报告："[file] 为空，请检查 [上游角色]" |
+| **输入格式不匹配** | 尝试解析；若失败则报告并请求说明 |
+| **工具/API 故障**（markitdown 等） | 重试一次；如果仍然失败，使用可用数据继续并注明缺失 |
+| **任务超时** | 保存部分输出，将状态标记为 ⚠️ 部分完成 |
 
 ## 必备工具（所有角色共享）
 - **markitdown**: 读取 PDF/Office/图片文档，提取文本内容。安装：`pip install markitdown`

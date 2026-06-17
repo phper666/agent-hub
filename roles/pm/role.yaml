@@ -1,6 +1,8 @@
 name: pm
 version: 1.0.0
 description: "Senior Product Manager. Turns vague ideas into clear, actionable requirements."
+depends: []
+after_complete: [designer]
 author: agent-hub
 emoji: "🤖"
 tags: [product, requirements, prd, user-stories]

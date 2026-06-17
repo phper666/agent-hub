@@ -1,0 +1,22 @@
+name: producer-reviewer
+description: "Generation with quality review loop — max 3 iterations before escalation"
+roles:
+  - name: producer
+    title: Senior Producer
+    description: Primary artifact generation
+    depends_on: []
+    after_complete: [reviewer]
+    review_loop:
+      max_iterations: 3
+      reviewer: reviewer
+      on_critical: "block and request re-generation"
+      on_minor: "note and pass through"
+  - name: reviewer
+    title: Quality Reviewer
+    description: Quality review against checklist criteria
+    depends_on: [producer]
+    after_complete: []
+    review_criteria:
+      - correctness
+      - completeness
+      - consistency

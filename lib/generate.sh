@@ -8,22 +8,47 @@
 
 # 主入口函数（供 agent-hub 主命令调用）
 cmd_generate() {
-  local domain="${1:-help}"
+  local domain=""
+  local pattern="pipeline"
 
-  case "$domain" in
-    help|--help|-h)
-      show_generate_help
-      ;;
+  # 解析参数
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --pattern|-p)
+        pattern="$2"
+        shift 2
+        ;;
+      help|--help|-h)
+        show_generate_help
+        return
+        ;;
+      *)
+        domain="$1"
+        shift
+        ;;
+    esac
+  done
+
+  if [ -z "$domain" ]; then
+    show_generate_help
+    return
+  fi
+
+  # 验证 pattern
+  case "$pattern" in
+    pipeline|fanout|producer-reviewer) ;;
     *)
-      create_role_files "$domain"
+      fail "未知模式: $pattern。可用模式: pipeline, fanout, producer-reviewer"
       ;;
   esac
+
+  create_role_files "$domain" "$pattern"
 }
 
 # 显示帮助
 show_generate_help() {
   echo ""
-  echo "用法: agent-hub generate <领域>"
+  echo "用法: agent-hub generate <领域> [--pattern <模式>]"
   echo ""
   echo "根据领域自动生成角色配置"
   echo ""
@@ -39,10 +64,15 @@ show_generate_help() {
   echo "  ai           AI 应用（4 角色）"
   echo "  ecommerce    电商（5 角色）"
   echo ""
+  echo "架构模式（--pattern）:"
+  echo "  pipeline           顺序流水线（默认）: A → B → C → D"
+  echo "  fanout             扇形并行: 分析 → 3路审查并行 → 合并"
+  echo "  producer-reviewer  生成-审查闭环: 生成 → 审查 → 修改（最多3轮）"
+  echo ""
   echo "示例:"
   echo "  agent-hub generate web"
-  echo "  agent-hub generate mobile"
-  echo "  agent-hub generate data"
+  echo "  agent-hub generate web --pattern fanout"
+  echo "  agent-hub generate data --pattern producer-reviewer"
   echo ""
 }
 
@@ -145,6 +175,7 @@ EOF
 # 创建角色目录和文件
 create_role_files() {
   local domain="$1"
+  local pattern="${2:-pipeline}"
 
   # 检查领域是否有效
   if ! get_domain_roles "$domain" > /dev/null 2>&1; then
@@ -153,6 +184,7 @@ create_role_files() {
 
   echo ""
   echo -e "${CYAN}🦞 正在为领域 '$domain' 创建角色文件...${NC}"
+  echo -e "   架构模式: ${GREEN}${pattern}${NC}"
   echo ""
 
   local roles_dir="roles"
@@ -161,11 +193,65 @@ create_role_files() {
   # 读取领域配置并创建角色
   local created=0
   local skipped=0
-  
+
+  # 如果模式不是 pipeline，尝试读取模式 YAML
+  if [ "$pattern" != "pipeline" ]; then
+    local pattern_file=".shared/templates/patterns/${pattern}.yaml"
+
+    if [ -f "$pattern_file" ]; then
+      # 从模式 YAML 读取角色信息（简单解析）
+      local current_name="" current_title="" current_desc=""
+      local in_roles=false
+
+      while IFS= read -r line; do
+        # 检测 roles 列表开始
+        if echo "$line" | grep -q "^roles:"; then
+          in_roles=true
+          continue
+        fi
+
+        if [ "$in_roles" = true ]; then
+          # 提取单个字段
+          if echo "$line" | grep -q "name:"; then
+            current_name=$(echo "$line" | sed 's/.*name: *//')
+          elif echo "$line" | grep -q "title:"; then
+            current_title=$(echo "$line" | sed 's/.*title: *//')
+          elif echo "$line" | grep -q "description:"; then
+            current_desc=$(echo "$line" | sed 's/.*description: *//')
+            # 拿到完整的三字段，创建角色
+            if [ -n "$current_name" ] && [ -n "$current_title" ] && [ -n "$current_desc" ]; then
+              if create_role "$current_name" "$current_title" "$current_desc"; then
+                created=$((created + 1))
+              else
+                skipped=$((skipped + 1))
+              fi
+              current_name=""; current_title=""; current_desc=""
+            fi
+          fi
+        fi
+      done < "$pattern_file"
+
+      echo ""
+      if [ "$created" -gt 0 ]; then
+        ok "角色文件创建完成: $created 个角色（模式: $pattern）"
+      fi
+      if [ "$skipped" -gt 0 ]; then
+        warn "跳过 $skipped 个已存在的角色"
+      fi
+      echo ""
+      echo "下一步："
+      echo "  1. agent-hub role list       查看角色列表"
+      echo "  2. agent-hub install all --global  安装所有角色"
+      return
+    else
+      fail "模式文件不存在: $pattern_file"
+    fi
+  fi
+
+  # 默认 pipeline 模式，走原有逻辑
   while IFS='|' read -r name title description; do
-    # 跳过空行
     [ -z "$name" ] && continue
-    
+
     if create_role "$name" "$title" "$description"; then
       created=$((created + 1))
     else
@@ -245,7 +331,7 @@ Before starting, read \`docs/current/status.md\` to verify upstream roles are co
 ## Workflow
 
 ### Step 1: Read Requirements
-Read PRD and user stories
+Read PRD and user stories. Check \`docs/current/feedback/\` for upstream notes.
 
 ### Step 2: Execute
 Execute tasks according to your role definition
@@ -253,10 +339,36 @@ Execute tasks according to your role definition
 ### Step 3: Update Status
 Update \`docs/current/status.md\`
 
+### Step 4: Self-Evaluation (Optional)
+After task completion, write a brief self-evaluation to \`docs/current/feedback/$name-self-eval.md\`:
+- What rules/skills helped
+- What rules didn't apply well or need improvement
+- Any expert knowledge gaps discovered
+
+## Team Communication Protocol
+
+| Situation | Action |
+|-----------|--------|
+| **Blocked** | Update \`docs/current/status.md\` with ❌ Blocked and reason |
+| **Upstream output has issues** | Write findings to \`docs/current/feedback/$name-feedback.md\` |
+| **Task complete** | Update \`docs/current/status.md\` with ✅ Done and output path |
+| **Inter-role handoff** | Check \`docs/current/feedback/\` before starting for known issues |
+
+## Error Handling
+
+| Exception | Handling |
+|-----------|----------|
+| **Required input file missing** | ❌ Stop and report: "Missing [file], waiting for [upstream role]" |
+| **Input file present but empty** | ⚠️ Stop and report: "[file] is empty, check with [upstream role]" |
+| **Input in unexpected format** | Try to parse; if fails, report and ask for clarification |
+| **Tool/API failure** (markitdown, etc.) | Retry once; if still fails, proceed with available data and note the gap |
+| **Timeout during task** | Save partial output, mark status as ⚠️ Partial |
+
 ## What You Do NOT Do
 - Do not do other roles' work
 - Do not modify other roles' outputs
 - Do not skip quality checks
+- Do not silently ignore missing or corrupted input — always report
 EOF
 
   # 创建 role.yaml

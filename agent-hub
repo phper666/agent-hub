@@ -61,9 +61,9 @@ cmd_help() {
   echo "  role info <name>                        查看角色详情"
   echo ""
   echo -e "${GREEN}安装/卸载${NC}"
-  echo "  install <role|all> [--global|--project]  安装角色到 Agent 平台"
-  echo "  uninstall <role|all> [--global|--project] 卸载角色"
-  echo "  update <role|all>                        更新已安装的角色"
+  echo "  install <role|all> [--global|--project] [--to <plats>]  安装角色到 Agent 平台"
+  echo "  uninstall <role|all> [--global|--project] [--to <plats>] 卸载角色"
+  echo "  update <role|all> [--to <plats>]                        更新已安装的角色"
   echo "  upgrade                                  升级 agent-hub 自身"
   echo ""
   echo -e "${GREEN}导入/导出${NC}"
@@ -78,8 +78,14 @@ cmd_help() {
   echo "  deps install                            安装所有依赖（markitdown 等）"
   echo "  deps list                               列出依赖"
   echo ""
+  echo -e "${GREEN}扩展工具${NC}"
+  echo "  code-intelligence                       代码智能（CodeGraph + code-review-graph）"
+  echo "                                          安装后对 AI 说「帮我安装 CodeGraph」"
+  echo "                                          即可自动完成下载、配置、项目初始化"
+  echo ""
   echo -e "${GREEN}流水线${NC}"
   echo "  pipeline status                         查看项目状态"
+  echo "  pipeline kanban                         查看 Sprint 看板"
   echo "  pipeline reset                          重置状态"
   echo ""
   echo -e "${GREEN}辅助${NC}"
@@ -98,8 +104,8 @@ cmd_init() {
   echo -e "${CYAN}╚══════════════════════════════════════════╝${NC}"
   echo ""
 
-  # 创建目录结构
-  mkdir -p roles .shared/rules .shared/skills templates tests docs/current
+  # 创建目录结构（支持多 Sprint 多需求）
+  mkdir -p roles .shared/rules .shared/skills templates tests docs/sprints docs/current
 
   # 创建配置文件
   if [ ! -f "agent-hub.yaml" ]; then
@@ -111,9 +117,12 @@ version: "2.1"
 roles:
   - pm
   - designer
+  - architect
   - frontend
   - backend
   - qa
+  - router
+  - delivery-director
 
 # 平台配置（detect 自动填充）
 platforms: []
@@ -129,8 +138,10 @@ shared_rules:
 
 # 共享技能
 shared_skills:
-  - .shared/skills/memory-guide.md
+  - .shared/skills/memory-guide/
   - .shared/skills/spec-driven-development/
+  - .shared/skills/prompt-engineering/
+  - .shared/skills/global-consistency-review/
 EOF
     ok "创建 agent-hub.yaml"
   fi

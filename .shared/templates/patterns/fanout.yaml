@@ -1,0 +1,28 @@
+name: fanout
+description: "Parallel analysis pattern — one coordinator dispatches N specialists concurrently, then merges results"
+roles:
+  - name: requirements-analyst
+    title: Senior Requirements Analyst
+    description: Requirements analysis and task decomposition
+    depends_on: []
+    after_complete: [security-reviewer, performance-reviewer, ux-reviewer]
+  - name: security-reviewer
+    title: Security Reviewer
+    description: Security audit and threat modeling
+    depends_on: [requirements-analyst]
+    after_complete: [report-integrator]
+  - name: performance-reviewer
+    title: Performance Reviewer
+    description: Performance analysis and bottleneck identification
+    depends_on: [requirements-analyst]
+    after_complete: [report-integrator]
+  - name: ux-reviewer
+    title: UX Reviewer
+    description: User experience review and accessibility audit
+    depends_on: [requirements-analyst]
+    after_complete: [report-integrator]
+  - name: report-integrator
+    title: Report Integrator
+    description: Merge all review reports into a unified document
+    depends_on: [security-reviewer, performance-reviewer, ux-reviewer]
+    after_complete: []
