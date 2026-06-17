@@ -124,7 +124,36 @@ cmd_pipeline() {
 
   case "$subcmd" in
     status) cmd_pipeline_status "$@" ;;
+    kanban) cmd_pipeline_kanban "$@" ;;
     reset)  cmd_pipeline_reset "$@" ;;
     *)      fail "未知子命令: pipeline $subcmd" ;;
   esac
+}
+
+# 多需求看板视图
+cmd_pipeline_kanban() {
+  local sprint_dir="docs/sprints/sprint-1"
+  local kanban_file="$sprint_dir/kanban.md"
+
+  if [ ! -f "$kanban_file" ]; then
+    # Fallback: find latest sprint
+    local latest
+    latest="$(ls -d docs/sprints/sprint-* 2>/dev/null | sort -V | tail -1)"
+    if [ -n "$latest" ]; then
+      kanban_file="$latest/kanban.md"
+    fi
+  fi
+
+  if [ -f "$kanban_file" ]; then
+    echo ""
+    echo -e "${CYAN}📊 Sprint Kanban${NC}"
+    echo ""
+    cat "$kanban_file"
+    echo ""
+  else
+    echo ""
+    warn "未找到 Kanban 文件。运行 'agent-hub pipeline kanban' 需要先启动 Sprint。"
+    info "在交付总监对话中说 '创建新 Sprint' 即可。"
+    echo ""
+  fi
 }

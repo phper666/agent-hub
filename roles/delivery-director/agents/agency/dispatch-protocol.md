@@ -100,6 +100,63 @@ When subagents return:
 
 **Platform Note**: If your Agent platform supports named subagents (e.g. WorkBuddy Agent ID, Reasonix skill name), pass the role path (e.g. `roles/backend/SKILL.md`) as the subagent identifier so it inherits the correct role definition. Do NOT use ad-hoc names.
 
+---
+
+## Batch Dispatch Protocol (v3.0.0 — Multi-Request)
+
+When the Kanban has multiple ready items at the same pipeline stage, dispatch them all in parallel.
+
+### Workflow
+
+```
+1. Scan Kanban → Find all REQs where current role = "⏳ Pending" and previous role = "✅ Done"
+2. Build one subagent task per REQ (each points to its own REQ directory)
+3. Dispatch ALL in parallel → wait for ALL to return
+4. Collect outputs, update Kanban, report to CEO
+5. Repeat for next role/wave
+```
+
+### Example: Wave 3 (3 Architects)
+
+```markdown
+Scan Kanban:
+  REQ-001: Designer ✅ → Architect ⏳  ← READY
+  REQ-002: Designer 🔄 → Architect ⏳  ← NOT READY (Designer not done)
+  REQ-003: Designer ✅ → Architect ⏳  ← READY
+
+Dispatch 2 Architects (REQ-001 and REQ-003):
+  task("architect for REQ-001 login",
+       role="roles/architect/SKILL.md",
+       desc="Read docs/sprints/sprint-1/REQ-001-login/PRD.md + design/ → produce architecture/")
+
+  task("architect for REQ-003 homepage",
+       role="roles/architect/SKILL.md",
+       desc="Read docs/sprints/sprint-1/REQ-003-homepage/PRD.md + design/ → produce architecture/")
+
+  # Both run concurrently. Each writes to its own REQ directory — no conflicts.
+
+Wait for both → update Kanban:
+  REQ-001: Architect ✅ → Backend/Frontend ⏳  ← READY for Wave 4
+  REQ-003: Architect ✅ → Backend/Frontend ⏳  ← READY for Wave 4
+```
+
+### Dispatch Size Limits
+
+| REQs Ready | Action |
+|:----------:|--------|
+| 1 | Dispatch immediately |
+| 2-5 | Dispatch all in parallel |
+| 6-10 | Dispatch in 2 batches of 5 |
+| 10+ | Dispatch in batches of 5, prioritize P0 over P1 over P2 |
+
+### Batch Dispatch Checklist
+
+Before dispatching a wave:
+- [ ] All upstream roles are "✅ Done" for each REQ being dispatched
+- [ ] Each REQ has its own directory (no file conflicts)
+- [ ] Inter-REQ dependencies are respected (REQ-002 depends on REQ-001 → REQ-002 waits)
+- [ ] Max 5 subagents per batch to avoid resource contention
+
 ## Pipeline Dispatch Map
 
 ```

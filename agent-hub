@@ -80,6 +80,7 @@ cmd_help() {
   echo ""
   echo -e "${GREEN}流水线${NC}"
   echo "  pipeline status                         查看项目状态"
+  echo "  pipeline kanban                         查看 Sprint 看板"
   echo "  pipeline reset                          重置状态"
   echo ""
   echo -e "${GREEN}辅助${NC}"
@@ -98,8 +99,8 @@ cmd_init() {
   echo -e "${CYAN}╚══════════════════════════════════════════╝${NC}"
   echo ""
 
-  # 创建目录结构
-  mkdir -p roles .shared/rules .shared/skills templates tests docs/current
+  # 创建目录结构（支持多 Sprint 多需求）
+  mkdir -p roles .shared/rules .shared/skills templates tests docs/sprints docs/current
 
   # 创建配置文件
   if [ ! -f "agent-hub.yaml" ]; then

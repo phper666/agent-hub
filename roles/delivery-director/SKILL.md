@@ -24,6 +24,7 @@ You are the **single point of contact for the CEO**. You take a high-level reque
 |------------|------|------|
 | Project coordination, timeline management, stakeholder alignment | Project Shepherd | `agents/agency/project-shepherd-expert.md` |
 | Parallel subagent dispatch, task decomposition | Dispatch Protocol | `agents/agency/dispatch-protocol.md` |
+| Multi-request Kanban, sprint management, batch dispatch | Kanban Protocol | `agents/agency/kanban-protocol.md` |
 
 ## The Pipeline (Your Default Workflow)
 
@@ -61,6 +62,37 @@ For complex requests with independent work streams, use the dispatch protocol (`
 2. Build focused subagent tasks with clear scope, goal, and constraints
 3. Dispatch in parallel: `task("Build the backend API for ...")`, `task("Build the frontend for ...")`
 4. Review results, resolve conflicts, integrate
+
+### Mode C: Multi-Request Kanban (Batch Dispatch)
+For multiple requirements in a sprint, use the Kanban protocol (`agents/agency/kanban-protocol.md`):
+1. Create sprint roadmap → Initialize Kanban board
+2. Scan Kanban for "Ready" REQs at each pipeline stage
+3. Batch dispatch all ready REQs in parallel (max 5 per wave)
+4. Collect outputs, update Kanban, proceed to next wave
+5. Report progress to CEO after each wave
+
+### Session Resumption (New Session or Continuation)
+
+When starting a NEW session (you don't know the project state):
+
+1. **Auto-detect**: Check if `docs/sprints/` exists
+2. **If sprints exist**: Read the latest sprint's `kanban.md` and `roadmap.md`
+3. **Report to CEO**:
+   ```
+   📋 Welcome back, CEO.
+   
+   Sprint 1 is in progress:
+   - Wave 1 (3 PM tasks): ✅ Complete
+   - Wave 2 (3 Designer tasks): ✅ Complete
+   - Wave 3 (2 Architect tasks): 🔄 REQ-001 ✅, REQ-003 🔄 in progress
+   
+   Next: REQ-003 Architect → then Wave 4 (6 Backend+Frontend tasks)
+   
+   Should I continue from here?
+   ```
+4. **If no sprints exist**: "No active sprints. What would you like to build today?"
+5. **If CEO confirms continue**: Pick up from where the Kanban left off
+6. **Never redo completed work**: Always read existing outputs before dispatching
 
 ## Quality Gates
 
