@@ -184,14 +184,8 @@ feat: add user authentication endpoint
 
 ### 测试驱动开发（TDD）
 
-**强制工作流：**
-
-1. 先写测试（RED）
-2. 运行测试 - 应该失败
-3. 写最少代码使测试通过（GREEN）
-4. 运行测试 - 应该通过
-5. 重构（IMPROVE）
-6. 验证覆盖率（80%+）
+> 详细规范见 `.shared/skills/test-driven-development/SKILL.md`（Frontend、Backend、QA 自动加载）。
+> 核心：先写测试 → 看它失败 → 最少代码通过 → 重构。
 
 ### 测试命名
 

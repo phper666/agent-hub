@@ -142,3 +142,48 @@ Each REQ directory has its own `status.md` tracking the classic pipeline:
 - No manual Kanban updates — let dispatched subagents output update their REQ's status
 - No cross-REQ coupling — each REQ is independent unless explicitly declared
 - No skipping stages — even if a REQ is "simple", it still goes through the pipeline
+
+---
+
+## Sprint Archiving & Partial Resume
+
+### When to Archive
+
+A sprint is ready for archiving when:
+- ALL REQs have status = ✅ Done in kanban.md
+- Delivery Director has delivered final CEO Brief
+- At least 24 hours have passed (cooling-off period for late feedback)
+
+### Archive Process
+
+1. **Generate Summary**
+   Create `docs/sprints/sprint-N/summary.md`:
+   ```markdown
+   # Sprint N — Summary
+   **Period**: YYYY-MM-DD → YYYY-MM-DD
+   **REQs**: N completed
+   **Blockers Encountered**: N (list each briefly)
+   **Total Re-review Cycles**: N
+   **Feedback Collected**: N items in docs/current/feedback/
+   ```
+
+2. **Move to Archive**
+   ```bash
+   mkdir -p docs/sprints/archive/
+   mv docs/sprints/sprint-N/ docs/sprints/archive/sprint-N/
+   ```
+
+3. **Update INDEX**
+   Append to `docs/sprints/archive/INDEX.md`:
+   ```markdown
+   | Sprint N | YYYY-MM-DD → YYYY-MM-DD | N | ✅ Complete | YYYY-MM-DD |
+   ```
+
+### Partial Resume Reference
+
+When the CEO wants to modify a completed REQ without redoing the entire pipeline:
+- Read the REQ's `status.md` to see which roles contributed
+- Identify the minimal set of roles to re-execute
+- Mark those roles as 🔄, keep others as ✅
+- Only dispatch the affected roles
+- Update kanban.md only for the affected REQ row

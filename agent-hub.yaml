@@ -23,4 +23,16 @@ shared_rules:
 
 # 共享技能
 shared_skills:
-  - .shared/skills/memory-guide.md
+  - .shared/skills/memory-guide/
+  - .shared/skills/spec-driven-development/
+  - .shared/skills/prompt-engineering/
+  - .shared/skills/global-consistency-review/
+  - .shared/skills/evolution-guide/
+  - .shared/skills/code-intelligence/
+  - .shared/skills/test-driven-development/
+  - .shared/skills/systematic-debugging/
+  - .shared/skills/subagent-driven-development/
+  - .shared/skills/collaborative-review/
+  - .shared/skills/pr-review/
+  - .shared/skills/frontend-ui-engineering/
+  - .shared/skills/tailwind-design-system/

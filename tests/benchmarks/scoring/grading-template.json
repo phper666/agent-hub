@@ -1,0 +1,37 @@
+{
+  "task_id": "pm-task-01-prd",
+  "task_name": "PM Task 01: PRD - Shopping Cart",
+  "evaluator": "evaluator-name",
+  "date": "YYYY-MM-DD",
+
+  "baseline": {
+    "run_id": "baseline-001",
+    "run_date": "YYYY-MM-DD",
+    "completeness": 0,
+    "technical_accuracy": 0,
+    "format_quality": 0,
+    "practicality": 0,
+    "weighted_score": 0,
+    "notes": ""
+  },
+
+  "with_agent_hub": {
+    "run_id": "agent-hub-001",
+    "run_date": "YYYY-MM-DD",
+    "agent_hub_version": "3.0.0",
+    "roles_used": ["pm"],
+    "completeness": 0,
+    "technical_accuracy": 0,
+    "format_quality": 0,
+    "practicality": 0,
+    "weighted_score": 0,
+    "notes": ""
+  },
+
+  "improvement": {
+    "absolute_delta": 0,
+    "percentage": 0,
+    "best_dimension": "",
+    "worst_dimension": ""
+  }
+}

@@ -4,7 +4,7 @@
 # ============================================================
 
 # 所有已知平台列表
-KNOWN_PLATFORMS="reasonix qoder claude cursor workbuddy codex gemini opencode"
+KNOWN_PLATFORMS="reasonix qoder claude cursor workbuddy codex gemini opencode zcode"
 
 # 获取平台的全局安装路径
 get_platform_global_path() {
@@ -18,6 +18,7 @@ get_platform_global_path() {
     codex)     echo "$HOME/.codex/skills" ;;
     gemini)    echo "$HOME/.gemini/skills" ;;
     opencode)  echo "$HOME/.config/opencode/skills" ;;
+    zcode)     echo "$HOME/.zcode/skills" ;;
     *)         echo "" ;;
   esac
 }
@@ -34,6 +35,7 @@ get_platform_project_path() {
     codex)     echo ".codex/skills" ;;
     gemini)    echo ".gemini/skills" ;;
     opencode)  echo ".opencode/skills" ;;
+    zcode)     echo ".zcode/skills" ;;
     *)         echo "" ;;
   esac
 }
@@ -45,8 +47,8 @@ detect_platform() {
   global_path="$(get_platform_global_path "$name")"
 
   if [ -n "$global_path" ]; then
-    # 目录检测：检查全局技能目录本身或其父目录是否存在
-    if [ -d "$global_path" ] || [ -d "$(dirname "$global_path")" ]; then
+    # 目录检测：检查全局技能目录本身是否存在
+    if [ -d "$global_path" ]; then
       return 0
     fi
   fi

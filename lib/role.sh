@@ -51,9 +51,11 @@ cmd_role_list() {
       # 角色 emoji 映射
       case "$name" in
         pm|product-manager) emoji="🤖" ;;
+        architect) emoji="🏛️" ;;
+        backend|backend-dev) emoji="⚙️" ;;
+        delivery-director) emoji="📋" ;;
         designer) emoji="🎨" ;;
         frontend|frontend-dev) emoji="💻" ;;
-        backend|backend-dev) emoji="⚙️" ;;
         qa|qa-engineer) emoji="🧪" ;;
         router) emoji="🔀" ;;
       esac
@@ -67,6 +69,53 @@ cmd_role_list() {
   echo ""
 }
 
+# 角色去重检查 — 创建前扫描已有角色是否功能重复
+check_role_duplication() {
+  local new_name="$1"
+  local new_description="$2"
+
+  [ ! -d "roles" ] && return 0
+
+  for existing_role in roles/*/; do
+    [ -d "$existing_role" ] || continue
+    local existing_name
+    existing_name="$(basename "$existing_role")"
+
+    local skill_file="$existing_role/SKILL.md"
+    [ ! -f "$skill_file" ] && continue
+
+    # 提取现有角色的 description
+    local existing_desc
+    existing_desc="$(grep "^description:" "$skill_file" 2>/dev/null | head -1 | sed 's/^description:[[:space:]]*//' | sed 's/[[:space:]]*$//')"
+    [ -z "$existing_desc" ] && continue
+
+    # 关键词重叠检测：将 description 拆成单词，计算重叠率
+    local overlap=0 total=0
+    for word in $new_description; do
+      # 跳过太短的词和 TODO 占位符
+      [ ${#word} -lt 3 ] && continue
+      echo "$word" | grep -qi "todo" && continue
+
+      total=$((total + 1))
+      if echo "$existing_desc" | grep -qi "$word"; then
+        overlap=$((overlap + 1))
+      fi
+    done
+
+    # 如果有意义的关键词 > 0 且重叠率 >= 50%，警告
+    if [ "$total" -gt 1 ] && [ "$(( overlap * 100 / total ))" -ge 50 ]; then
+      local overlap_pct=$(( overlap * 100 / total ))
+      warn "新角色 '$new_name' 与已有角色 '$existing_name' 功能相似"
+      info "  新角色描述: $new_description"
+      info "  已有角色描述: $existing_desc"
+      info "  关键词重叠率: ${overlap_pct}%"
+      info "  建议: 扩展已有角色 (agent-hub role edit $existing_name) 或确认后重试"
+      return 1
+    fi
+  done
+  return 0
+}
+
 # 创建角色模板
 cmd_role_create() {
   local name="$1"
@@ -78,6 +127,13 @@ cmd_role_create() {
   if [ -d "$role_dir" ]; then
     warn "角色 '$name' 已存在"
     return
+  fi
+
+  # 去重检查
+  local role_desc="TODO: 角色职责描述，请在创建后编辑"
+  if ! check_role_duplication "$name" "$role_desc"; then
+    info "如需跳过检查，使用 --force 参数（暂不支持）"
+    return 1
   fi
 
   mkdir -p "$role_dir/rules" "$role_dir/skills"
@@ -119,8 +175,37 @@ description: |
 ### Step 1: TODO
 TODO: 描述工作流程
 
+### Step 2: Update Status
+更新 \`docs/current/status.md\` 标记当前角色状态
+
+### Step 3: Self-Evaluation (可选)
+任务完成后，将简要自评写入 \`docs/current/feedback/{role}-self-eval.md\`：
+- 哪些规则/技能帮上忙了
+- 哪些规则不适用/可以改进
+- 是否有 Expert 知识遗漏
+
+## Team Communication Protocol（团队通信协议）
+
+| 场景 | 行为 |
+|------|------|
+| **被阻塞时** | 更新 \`docs/current/status.md\`，标记为 ❌ Blocked，注明原因 |
+| **上游产出有问题时** | 将发现写入 \`docs/current/feedback/{role}-feedback.md\`，通知 Delivery Director |
+| **完成任务时** | 更新 \`docs/current/status.md\`，标记为 ✅ Done，注明产出路径 |
+| **跨角色交接** | 启动前检查 \`docs/current/feedback/\` 目录，确认是否有已知问题 |
+
+## Error Handling（错误处理）
+
+| 异常类型 | 处理方式 |
+|---------|---------|
+| **Input 文件缺失** | ❌ 停止并报告："缺少 [文件名]，等待 [上游角色] 完成" |
+| **Input 文件存在但为空** | ⚠️ 停止并报告："[文件名] 为空，请检查 [上游角色] 的产出" |
+| **Input 格式不符合预期** | 尝试解析；失败则报告并请求澄清 |
+| **工具/API 失败** (markitdown等) | 重试 1 次；仍失败则用已有数据继续，在产出中注明缺失部分 |
+| **任务超时** | 保存部分产出，标记状态为 ⚠️ Partial |
+
 ## 你不能做的事
 - TODO: 列出限制
+- 不要静默忽略缺失或损坏的 Input — 始终报告
 EOF
 
   ok "角色 '$name' 已创建: $role_dir/SKILL.md"
@@ -155,6 +240,8 @@ cmd_role_delete() {
     fail "角色 '$name' 不存在"
   fi
 
+  [ -z "$role_dir" ] && fail "内部错误：角色路径为空"
+  [ "$role_dir" = "roles" ] || [ "$role_dir" = "roles/" ] && fail "内部错误：不允许删除 roles 目录"
   rm -rf "$role_dir"
   ok "角色 '$name' 已删除"
 }

@@ -74,6 +74,9 @@ uninstall_role_from_platform() {
   local target_dir="$target_base/$role_name"
 
   if [ -d "$target_dir" ]; then
+    # 安全检查：确保 target_dir 不以 / 结尾（防止 rm -rf /）
+    [ "$target_dir" = "/" ] && { echo "安全错误：拒绝删除根目录" >&2; return 1; }
+    [ ${#target_dir} -lt 5 ] && { echo "安全错误：目标路径过短" >&2; return 1; }
     rm -rf "$target_dir"
     return 0
   fi
@@ -149,6 +152,10 @@ cmd_install() {
   echo ""
   if [ "$total" -gt 0 ]; then
     ok "安装完成: $total 个角色实例"
+    echo ""
+    echo -e "${BLUE}💡 扩展工具：安装 CodeGraph + code-review-graph 后，AI 可以追踪${NC}"
+    echo -e "${BLUE}   代码依赖、自动分析 PR 影响范围。对你的角色说：${NC}"
+    echo -e "${GREEN}   "帮我安装 CodeGraph 和 code-review-graph"${NC}"
   else
     warn "没有安装任何角色。如果是全局安装，可能需要在终端里手动运行命令（home 目录有权限限制）"
   fi
@@ -225,8 +232,10 @@ cmd_update() {
   echo ""
 
   # 先卸载再安装
-  cmd_uninstall "$target" "--$mode" --to "$platforms"
-  cmd_install "$target" "--$mode" --to "$platforms"
+  set -- "$target" "--$mode" --to "$platforms"
+  cmd_uninstall "$@"
+  set -- "$target" "--$mode" --to "$platforms"
+  cmd_install "$@"
 
   ok "更新完成"
   echo ""
@@ -266,12 +275,12 @@ cmd_upgrade() {
       echo ""
       info "如需远程同步，添加远程仓库："
       echo "  cd $AGENT_HUB_DIR"
-      echo "  git remote add origin https://github.com/your-repo/agent-hub.git"
+      echo "  git remote add origin https://github.com/phper666/agent-hub.git"
       echo "  git push -u origin main"
     fi
   else
     info "非 Git 安装，请手动下载最新版本"
-    echo "  GitHub: https://github.com/your-repo/agent-hub"
+    echo "  GitHub: https://github.com/phper666/agent-hub"
   fi
 
   echo ""

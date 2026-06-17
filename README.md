@@ -1,765 +1,115 @@
 # 🦞 Agent Hub — AI 角色包管理器
 
-**像 npm 管理 Node.js 包一样，管理 AI Agent 的角色和技能。**
+**像 npm 管包一样，管 AI Agent 的角色和技能。**
 
-Agent Hub 是一个 AI 角色包管理器，让你一次定义角色，即可安装到所有主流 AI Agent 平台（Reasonix、Qoder、Claude、Cursor、WorkBuddy、Codex、Gemini、openCode），免去手动复制和格式适配的烦恼。
-
----
-
-## 目录
-
-- [功能特性](#功能特性)
-- [快速开始](#快速开始)
-- [全部命令](#全部命令)
-- [内置角色](#内置角色)
-- [共享规则](#共享规则)
-- [集成项目](#集成项目)
-- [DAG 流水线](#dag-流水线)
-- [支持平台](#支持平台)
-- [项目结构](#项目结构)
-- [创建自定义角色](#创建自定义角色)
-- [工作原理](#工作原理)
-- [多平台支持](#多平台支持)
-- [免责声明](#免责声明)
-- [致谢](#致谢)
-- [联系方式](#联系方式)
+一次定义，安装到所有平台（Claude Code、Cursor、Codex、ZCode 等 9 个）。免去手动复制和格式适配。
 
 ---
 
 ## 功能特性
 
-- 🔍 **自动检测平台** — 自动扫描本地已安装的 AI Agent 平台，无需手动配置
-- 📦 **一键安装角色** — 将角色同时部署到所有已检测平台的正确目录
-- 🎯 **项目级 / 全局安装** — 支持仅当前项目生效或所有项目共享两种模式
-- 🎭 **8 个内置角色 + 13 个领域专家** — 产品经理、设计师、架构师、前端、后端、测试、交付总监、路由角色 + 专家知识注入
-- 📐 **6 套共享规则** — Git 规范、质量标准、安全编码、精简输出、代码规范、代码审查自动注入所有角色
-- 🔌 **集成 15+ 个开源项目** — 深度集成 markitdown、agency-agents、Rules 2.1、superpowers、ECC、taste-skill、headroom、harness、supermemory、spec-kit、open-code-review、pr-agent
-- 🏭 **领域模板生成** — 支持 10 个领域（Web、Mobile、Data、API、ML、DevOps 等）一键生成角色配置
-- 📋 **多需求看板** — Kanban 协议支持多需求并行管理，批量 subagent 调度，Sprint 级协调
-- 🔄 **断点续传** — Session Resumption 自动检测项目状态，新对话即续接，无需手动同步
-- 📤 **导入 / 导出** — 支持从其他项目导入角色，或导出角色为 YAML 分享
-- 🔄 **流水线状态** — 追踪各角色的工作完成状态
-- ⛓️ **DAG 依赖编排** — 角色间 depends_on / after_complete 自动生成依赖图，pipeline status 可视化
-- 🧠 **选择性加载** — Expert Selection Guide 按任务域选择专家，节省 36% Token
-- 🚀 **Subagent 并行调度** — Dispatch Protocol 支持独立任务并发执行
-- 🐧 **跨平台支持** — 完整支持 Linux、macOS、Windows（Git Bash / WSL）
+- 🎭 **8 个内置角色 + 13 个共享技能** — PM → Designer → Architect → Frontend/Backend → QA → Delivery Director，覆盖全流程
+- 📦 **一键安装多平台** — `agent-hub install all --global` 部署到所有已检测 AI 工具
+- 🔌 **集成 16+ 开源项目** — superpowers、spec-kit、ECC、pr-agent、CodeGraph 等
+- 🧠 **按需加载，防 Token 爆炸** — Expert Selection Guide + 轻量模式，最重角色 Core ~20k tokens
+- 🐧 **Linux / macOS / Windows** — 一条 curl 命令安装
 
 ---
 
 ## 快速开始
 
-### 1. 安装 Agent Hub
-
-#### 一键安装（推荐）
+### 安装
 
 ```bash
-# Linux / macOS / Windows (Git Bash / WSL)
 curl -fsSL https://raw.githubusercontent.com/phper666/agent-hub/main/install.sh | bash
 ```
 
-安装脚本会自动：
-- 克隆仓库到 `~/.agent-hub`
-- 创建符号链接到 `~/.local/bin/agent-hub`
-- 配置 `PATH` 环境变量
-
-#### 手动安装
+### 检测平台 + 安装角色
 
 ```bash
-git clone https://github.com/phper666/agent-hub.git ~/.agent-hub
-cd ~/.agent-hub
-chmod +x agent-hub
-
-# 添加到 PATH（根据你的 shell 选择）
-echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc   # bash
-# echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.zshrc  # zsh
-source ~/.bashrc
+agent-hub detect                    # 扫描本地 AI 工具
+agent-hub install all --global      # 安装全部角色
 ```
 
-#### 卸载
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/phper666/agent-hub/main/uninstall.sh | bash
-```
-
-### 2. 检测已安装的 Agent 平台
-
-```bash
-agent-hub detect
-
-# 输出示例：
-# ✅ reasonix
-# ✅ qoder
-# ✅ claude
-# ✅ cursor
-# ✅ workbuddy
-# ✅ codex
-# ✅ gemini
-# ✅ 检测到 7 个平台
-```
-
-### 3. 初始化项目（可选）
-
-```bash
-cd your-project/
-agent-hub init
-```
-
-这会在当前目录创建角色目录结构和配置文件 `agent-hub.yaml`。
-
-### 4. 安装角色
-
-```bash
-cd your-project/
-
-# 安装所有角色到当前项目
-agent-hub install all --project
-
-# 只安装 PM 角色到指定平台
-agent-hub install pm --project --to reasonix,claude
-
-# 全局安装（所有项目都能用）
-agent-hub install all --global
-```
-
-### 5. 使用角色
-
-安装完成后，在对应的 Agent 中新建会话，输入角色关键词即可激活：
+### 使用
 
 ```
-用户：切换到产品经理
-Agent：已切换到产品经理角色，加载规则：git-rules, quality-rules
-用户：帮我分析这个需求...
-Agent：（以产品经理的身份和能力回答）
+在 AI 工具中新建会话，说 "切换到 Backend" 或 "用 Frontend 角色"
+AI 自动加载该角色的规则、技能和专家知识
 ```
+
+> 💡 装完后，对角色说 **「帮我安装 CodeGraph 和 code-review-graph」**，AI 会自动配置代码智能分析。
 
 ---
 
-## 全部命令
+## 核心概念
 
-### 初始化
+### 角色 = SKILL.md + Expert
+
+每个角色是一个 `SKILL.md`（工程框架：加载顺序、I/O 定义）加上按需加载的 Expert（领域专家：技术深度）。
+
+```
+安装 → AI 读 SKILL.md → 按 Core Loading Order 加载规则+技能 → 按任务域选 Expert
+```
+
+### .shared/ = 共享层
+
+`rules/`（6 个）和 `skills/`（13 个）自动注入所有角色。每个技能内置 `## When to Load` 门控表，AI 按角色+任务域决定是否加载。
+
+### 流水线是推荐，不是强制
+
+```
+PM → Designer → Architect → [Frontend + Backend] → QA → Delivery Director
+```
+
+`depends_on` / `after_complete` 只是 YAML 元数据。**你可以只用一个角色**——Agent Hub 是工具箱，不是生产线。
+
+### 不想全流程？只用开发角色
 
 ```bash
-agent-hub init                                  # 在当前目录创建角色目录结构
+agent-hub install backend --project     # 只装后端，跳过 PM/Designer/QA
+agent-hub install frontend --project    # 只装前端
 ```
-
-### 平台检测
-
-```bash
-agent-hub detect                                # 检测本地已安装的 Agent 平台
-```
-
-### 角色管理
-
-```bash
-agent-hub role list                             # 列出所有角色（显示名称、描述、状态）
-agent-hub role create <name>                    # 创建角色模板（生成 SKILL.md 骨架）
-agent-hub role edit <name>                      # 用编辑器打开角色的 SKILL.md
-agent-hub role delete <name>                    # 删除角色
-agent-hub role info <name>                      # 查看角色详情
-```
-
-### 安装 / 卸载 / 更新
-
-```bash
-# 项目级安装（只在当前项目生效）
-agent-hub install pm --project
-agent-hub install all --project
-agent-hub install pm --project --to reasonix,claude
-
-# 全局安装（所有项目都能用）
-agent-hub install pm --global
-agent-hub install all --global
-
-# 卸载
-agent-hub uninstall pm --project
-agent-hub uninstall all --global
-
-# 更新（卸载 + 重装）
-agent-hub update pm --project
-agent-hub update all --global
-
-# 升级 agent-hub 自身
-agent-hub upgrade
-```
-
-### 导入 / 导出
-
-```bash
-# 从其他项目导入角色
-agent-hub import /path/to/role-directory
-
-# 导出单个角色
-agent-hub export pm
-agent-hub export pm --output pm.yaml
-```
-
-### 领域生成
-
-```bash
-# 根据领域自动生成角色配置
-agent-hub generate web              # Web 开发
-agent-hub generate mobile           # 移动端开发
-agent-hub generate data             # 数据分析
-agent-hub generate api              # API 开发
-agent-hub generate ml               # 机器学习
-agent-hub generate devops           # DevOps
-agent-hub generate game             # 游戏开发
-agent-hub generate blockchain       # 区块链
-agent-hub generate ai               # AI 应用
-agent-hub generate ecommerce        # 电商
-```
-
-### 依赖管理
-
-```bash
-agent-hub deps install              # 安装依赖（markitdown 等）
-agent-hub deps list                 # 列出依赖
-```
-
-### 流水线状态
-
-```bash
-agent-hub pipeline status           # 查看各角色的完成状态
-agent-hub pipeline reset            # 重置状态
-```
-
-### 辅助
-
-```bash
-agent-hub version                   # 版本信息
-agent-hub help                      # 显示帮助
-```
-
----
-
-## 内置角色
-
-### 两层架构
-
-Agent Hub 采用 **角色框架 (SKILL.md) + 领域专家 (Expert)** 的两层架构：
-
-- **SKILL.md** — 工程框架，负责加载顺序、输入/输出定义、Dependency Check、状态更新
-- **Expert** — 领域知识，负责身份定义、核心能力、代码示例、技术深度
-
-### 角色一览
-
-| 角色 | Emoji | 描述 | 关联 Expert |
-|------|-------|------|-------------|
-| **pm** | 🤖 | 产品经理 — 需求分析、PRD、用户故事 | `product-manager-expert` |
-| **designer** | 🎨 | UI/UX 设计师 — 界面、原型、设计系统 | `ui-designer-expert`、`ux-researcher-expert` |
-| **architect** | 🏛️ | 软件架构师 — 系统设计、API Spec、技术选型 | `software-architect-expert` |
-| **frontend** | 💻 | 前端工程师 — React/Vue/Angular、状态管理 | `frontend-developer-expert` |
-| **backend** | ⚙️ | 后端工程师 — API、数据库、服务端 | `backend-architect-expert`、`database-optimizer-expert`、`devops-automator-expert`、`sre-engineer-expert` |
-| **qa** | 🧪 | 测试工程师 — 测试计划、质量保障 | `code-reviewer-expert`、`security-engineer-expert` |
-| **router** | 🔀 | 角色路由 — 根据路径/关键词自动切换 | — |
-| **delivery-director** | 📋 | 交付总监 — CEO唯一对接人，调度全团 | `project-shepherd-expert` |
-
-每个角色包含：
-
-```
-roles/<角色名>/
-├── SKILL.md                  # 角色框架（工程流程协调）
-├── role.yaml                 # 角色元数据
-├── agents/agency/
-│   ├── <角色名>-expert.md    # 领域专家（技术深度）
-│   └── ...  
-├── rules/                    # 角色专属规则（可选）
-├── skills/                   # 角色专属技能（可选）
-└── agents/                   # 其他子角色（可选）
-```
-
----
-
-## 共享规则
-
-所有角色在安装时会自动注入以下全局共享规则：
-
-| 规则文件 | 内容概述 | 来源 |
-|---------|---------|------|
-| `git-rules.md` | Git 提交规范（Conventional Commits）、分支管理、PR 标准、代码审查流程 | 原创 |
-| `quality-rules.md` | 代码质量标准、测试覆盖率（≥80%）、代码审查规范、CI/CD 要求 | 原创 |
-| `security-rules.md` | 安全编码规范、输入校验、认证授权、数据保护、API 安全 | 原创 |
-| `output-rules.md` | 输出格式规范、简洁原则、状态标记、Token 优化技巧 | 基于 [headroom](https://github.com/chopratejas/headroom) |
-| `code-standards.md` | KISS/DRY/YAGNI 原则、文件组织、错误处理、命名约定、测试要求（TDD） | 基于 [ECC](https://github.com/affaan-m/ECC) |
-| `code-review-rules.md` | 代码审查规范、四层优先级链、路径过滤系统、结构化审查输出 | 基于 [open-code-review](https://github.com/alibaba/open-code-review) |
-
-> 共享规则位于 `.shared/rules/` 目录，优先级低于角色专属规则。
-
----
-
-
-## 集成项目
-
-Agent Hub 集成了 15+ 个高质量开源项目，增强角色能力。所有集成项目版权归原作者所有，Agent Hub 仅作集成使用。
-
-> 📖 **详细说明请参考 [docs/integrations.md](docs/integrations.md)**
-
-### 集成方式汇总
-
-| # | 项目 | Stars | 集成方式 | 影响范围 | 文件位置 |
-|---|------|-------|---------|---------|---------|
-| 1 | [markitdown](https://github.com/microsoft/markitdown) | 146.5k | 必备工具 | 所有角色 | `roles/*/SKILL.md` |
-| 2 | [superpowers](https://github.com/jnMetaCode/superpowers-zh) | 159k | 按角色独立 | Designer、Frontend、Backend、QA | `roles/<role>/skills/` |
-| 3 | [ECC](https://github.com/affaan-m/ECC) | 216k | 共享规则 | 所有角色 | `.shared/rules/code-standards.md` |
-| 4 | [taste-skill](https://github.com/Leonxlnx/taste-skill) | 44k | 角色专属 | Designer、Frontend | `roles/designer/SKILL.md`、`roles/frontend/SKILL.md` |
-| 5 | [headroom](https://github.com/chopratejas/headroom) | 28k | 共享规则 | 所有角色 | `.shared/rules/output-rules.md` |
-| 6 | [harness](https://github.com/revfactory/harness) | 7k | CLI 命令 | 新角色生成 | `lib/generate.sh` |
-| 7 | [supermemory](https://github.com/supermemoryai/supermemory) | 27k | 共享技能 | 所有角色 | `.shared/skills/memory-guide.md` |
-| 8 | [spec-kit](https://github.com/github/spec-kit) | 112k | 共享技能 | 所有角色 | `.shared/skills/spec-driven-development/SKILL.md` |
-| 9 | [agency-agents](https://github.com/msitarzewski/agency-agents) | 113k | 角色专属 Agent | Frontend、Backend、Designer、PM、QA | `roles/*/agents/agency/` |
-| 10 | [open-code-review](https://github.com/alibaba/open-code-review) | 7.2k | 共享规则 | Frontend、Backend | `.shared/rules/code-review-rules.md` |
-| 11 | [pr-agent](https://github.com/The-PR-Agent/pr-agent) | 11.6k | 角色专属 | Frontend、Backend | `roles/{frontend,backend}/skills/pr-review/SKILL.md` |
-| 12 | [Rules 2.1 bug-fix](https://github.com/Mr-chen-05/rules-2.1-optimized) | 92★ | 角色专属 | Backend、Frontend、QA | `roles/{backend,frontend}/agents/agency/*-expert.md`、`roles/qa/skills/systematic-debugging/SKILL.md` |
-| 13 | [Rules 2.1 code-review](https://github.com/Mr-chen-05/rules-2.1-optimized) | 84★ | 角色专属 | QA | `roles/qa/agents/agency/code-reviewer-expert.md` |
-| 14 | [superpowers dispatch](https://github.com/obra/superpowers) | 159k | 角色专属 | Delivery Director | `roles/delivery-director/agents/agency/dispatch-protocol.md` |
-| 15 | [WorkBuddy IS_PASS](https://workbuddy.ai) | — | 共享技能 | Backend、Frontend | `.shared/skills/global-consistency-review.md` |
-
-### 协同工作流
-
-```
-PM 用 spec-kit 定义规格（做什么）
-    ↓
-Designer 用 taste-skill 设计界面
-    ↓
-Architect 用 agency-agents + Rules 2.1 设计架构 + 拆解任务
-    ↓
-Backend / Frontend 用 superpowers 并行开发
-    ↓
-Engineer 用 IS_PASS 全局一致性自检
-    ↓
-QA 用 Smart Routing 测试 + 分类路由
-    ↓
-Delivery Director 用 Dispatch Protocol 调度全团 → CEO Brief
-```
-
----
-
-## DAG 流水线
-
-Agent Hub 的角色通过 `depends_on` / `after_complete` 声明依赖关系。`pipeline status` 命令自动从 SKILL.md frontmatter 读取并可视化：
-
-```
-PM          → depends_on: []               → after: [designer]
-Designer    → depends_on: [pm]             → after: [architect]
-Architect   → depends_on: [pm, designer]   → after: [backend, frontend]
-Backend     → depends_on: [architect]      → after: [qa]
-Frontend    → depends_on: [architect]      → after: [qa]
-QA          → depends_on: [backend, frontend] → after: []
-Delivery Director → orchestrates all, reports to CEO
-```
-
-### 选择性加载机制 (Token 优化)
-
-每个 SKILL.md 将加载列表分为两部分：
-- **Core Loading Order** — 始终加载（规则 + 技能 + 框架，~14.5k tokens）
-- **Expert Selection Guide** — 按任务域选择 1-3 个 Expert（每个 ~1.5k tokens）
-
-> 对比全量加载（~25k tokens），选择性加载节省 36%，仅占上下文窗口的 8-10%。
 
 ---
 
 ## 支持平台
 
-### AI Agent 平台
-
-| 平台 | 检测方式 | 全局安装路径 | 项目安装路径 |
-|------|---------|-------------|-------------|
-| **Reasonix** | 目录检测 | `~/Library/Application Support/reasonix/skills` | `.reasonix/skills` |
-| **Qoder** | 目录检测 | `~/.qoder/skills` | `.qoder/skills` |
-| **Claude** | 目录检测 | `~/.claude/skills` | `.claude/skills` |
-| **Cursor** | 目录检测 | `~/.cursor/skills` | `.cursor/skills` |
-| **WorkBuddy** | 目录检测 | `~/.workbuddy/skills` | `.workbuddy/skills` |
-| **Codex** | 目录检测 | `~/.codex/skills` | `.codex/skills` |
-| **Gemini** | 目录检测 | `~/.gemini/skills` | `.gemini/skills` |
-| **openCode** | 目录检测 | `~/.config/opencode/skills` | `.opencode/skills` |
-
-### 操作系统
-
-| 操作系统 | 支持状态 | 说明 |
-|---------|---------|------|
-| **Linux** | ✅ 完全支持 | Ubuntu、Debian、CentOS、Fedora 等主流发行版 |
-| **macOS** | ✅ 完全支持 | Intel 和 Apple Silicon (M1/M2/M3/M4) |
-| **Windows (Git Bash)** | ✅ 完全支持 | 推荐安装 [Git for Windows](https://gitforwindows.org) |
-| **Windows (WSL)** | ✅ 完全支持 | Windows Subsystem for Linux |
-| **Windows (原生)** | ⚠️ 有限支持 | 需手动配置 PATH，推荐使用 Git Bash 或 WSL |
+Reasonix · Qoder · Claude Code · Cursor · WorkBuddy · Codex · Gemini · openCode · ZCode
 
 ---
 
-## 项目结构
+## 文档
 
-```
-agent-hub/
-├── agent-hub                     # CLI 入口脚本（Bash）
-├── agent-hub.yaml                # 项目配置文件
-├── install.sh                    # 一键安装脚本
-├── uninstall.sh                  # 一键卸载脚本
-├── LICENSE                       # MIT 许可证
-├── README.md                     # 项目文档
-├── lib/                          # CLI 模块
-│   ├── detect.sh                 # 平台检测模块
-│   ├── install.sh                # 安装 / 卸载 / 更新 / 升级模块
-│   ├── role.sh                   # 角色管理 / 导入 / 导出模块
-│   ├── generate.sh               # 领域生成模块（基于 harness）
-│   └── pipeline.sh               # 流水线状态模块
-├── roles/                        # 内置角色
-│   ├── pm/
-│   │   ├── SKILL.md              # 产品经理人设与工作流
-│   │   ├── role.yaml             # 角色元数据
-│   │   └── agents/
-│   │       └── agency/           # 来自 agency-agents 的专家角色
-│   │           └── product-manager-expert.md
-│   ├── designer/
-│   │   ├── SKILL.md              # UI/UX 设计师人设与工作流
-│   │   ├── role.yaml
-│   │   ├── agents/
-│   │   │   ├── ui-designer.md    # 子角色：UI 设计师
-│   │   │   └── agency/           # 来自 agency-agents 的专家角色
-│   │   │       ├── ui-designer-expert.md
-│   │   │       └── ux-researcher-expert.md
-│   │   └── skills/               # 设计师专属 skills
-│   │       ├── tailwind-design-system/
-│   │       └── frontend-ui-engineering/
-│   ├── frontend/
-│   │   ├── SKILL.md              # 前端工程师人设与工作流
-│   │   ├── role.yaml
-│   │   ├── agents/
-│   │   │   ├── frontend-developer.md
-│   │   │   └── agency/           # 来自 agency-agents 的专家角色
-│   │   │       └── frontend-developer-expert.md
-│   │   ├── rules/
-│   │   │   ├── component-rules.md
-│   │   │   ├── state-management-rules.md
-│   │   │   └── style-rules.md
-│   │   └── skills/               # 前端专属 skills
-│   │       ├── test-driven-development/
-│   │       ├── subagent-driven-development/
-│   │       ├── systematic-debugging/
-│   │       ├── tailwind-design-system/
-│   │       ├── frontend-ui-engineering/
-│   │       ├── pr-review/        # PR 审查技能（基于 pr-agent）
-│   │       └── collaborative-review/  # 多 Agent 协作审查
-│   ├── backend/
-│   │   ├── SKILL.md              # 后端工程师人设与工作流
-│   │   ├── role.yaml
-│   │   ├── agents/
-│   │   │   ├── backend-architect.md
-│   │   │   ├── database-optimizer.md
-│   │   │   └── agency/           # 来自 agency-agents 的专家角色
-│   │   │       ├── backend-architect-expert.md
-│   │   │       └── database-optimizer-expert.md
-│   │   ├── rules/
-│   │   │   ├── api-rules.md
-│   │   │   ├── backend-security-rules.md
-│   │   │   └── db-rules.md
-│   │   └── skills/               # 后端专属 skills
-│   │       ├── test-driven-development/
-│   │       ├── subagent-driven-development/
-│   │       ├── systematic-debugging/
-│   │       ├── pr-review/        # PR 审查技能（基于 pr-agent）
-│   │       └── collaborative-review/  # 多 Agent 协作审查
-│   ├── qa/
-│   │   ├── SKILL.md              # 测试工程师人设与工作流
-│   │   ├── role.yaml
-│   │   ├── agents/
-│   │   │   ├── code-reviewer.md
-│   │   │   └── agency/           # 来自 agency-agents 的专家角色
-│   │   │       ├── code-reviewer-expert.md
-│   │   │       └── security-engineer-expert.md
-│   │   └── skills/               # QA 专属 skills
-│   │       ├── test-driven-development/
-│   │       ├── systematic-debugging/
-│   │       └── verification-before-completion/
-│   └── router/
-│       ├── SKILL.md              # 角色路由（自动检测与切换）
-│       └── role.yaml
-├── .shared/                      # 全局共享资源
-│   ├── rules/
-│   │   ├── git-rules.md          # Git 提交与分支规范
-│   │   ├── quality-rules.md      # 代码质量标准
-│   │   ├── security-rules.md     # 安全编码规范
-│   │   ├── output-rules.md       # 输出格式规范（含 headroom 优化）
-│   │   ├── code-standards.md     # 代码规范（基于 ECC）
-│   │   └── code-review-rules.md  # 代码审查规范（基于 open-code-review）
-│   └── skills/
-│       ├── memory-guide.md       # 记忆管理指南（基于 supermemory）
-│       └── spec-driven-development/  # 规格驱动开发（基于 spec-kit）
-├── templates/                    # 角色模板
-└── tests/                        # 测试
-```
-
----
-
-## 创建自定义角色
-
-### 使用命令创建
-
-```bash
-# 创建角色模板
-agent-hub role create my-role
-
-# 编辑 SKILL.md
-agent-hub role edit my-role
-```
-
-### 生成的模板结构
-
-执行 `role create` 后会在 `roles/my-role/` 目录下生成以下文件：
-
-**`roles/my-role/SKILL.md`**：
-
-```markdown
----
-name: my-role
-description: Senior My Role. One-line description of responsibilities.
-depends_on: []
-after_complete: []
----
-
-# Role Framework: My Role
-
-You are the **engineering framework** for the My Role role.
-
-## Core Loading Order (Always Loaded)
-1. `.shared/rules/git-rules.md` — Git conventions
-2. `.shared/rules/quality-rules.md` — Quality standards
-3. `.shared/rules/security-rules.md` — Security standards
-4. `.shared/rules/output-rules.md` — Concise output (headroom)
-5. This file
-
-## Expert Selection Guide (Context-Dependent)
-| Task Domain | Load | File |
-|------------|------|------|
-| Domain expertise | My Expert | `agents/agency/my-expert.md` |
-
-## Input
-| File | Source | Required |
-|------|--------|:--------:|
-| docs/current/status.md | All roles | ✅ |
-
-## Output
-| File | Consumer | Required |
-|------|----------|:--------:|
-| docs/current/status.md | All roles | ✅ |
-
-## Engineering Principles
-- Stay within role boundaries
-
-## Workflow
-### Step 1: Read → Input docs
-### Step 2: Execute → Per role definition
-### Step 3: Update Status → status.md
-
-## What You Do NOT Do
-- No other roles' work
-```
-
-### 编写自定义角色的最佳实践
-
-1. **设置 depends_on / after_complete** — 声明上游依赖和下游角色，加入 DAG 流水线
-2. **定义 Expert Selection Guide** — 按任务域列出可选 Expert，防止 Token 爆炸
-3. **定义 Input / Output 表** — 明确文件交接接口
-4. **定义工程流程** — 用 `Step 1 → Step 2 → Step 3` 格式
-5. **定义边界** — "What You Do NOT Do" 越清晰，角色越专注
-6. **创建 Expert**（可选） — 在 `agents/agency/` 下创建领域专家 Markdown 文件
-7. **创建专属规则**（可选） — 在 `rules/` 目录下创建角色专属规则
-
-### 安装自定义角色
-
-```bash
-# 项目级安装
-agent-hub install my-role --project
-
-# 全局安装
-agent-hub install my-role --global
-
-# 指定平台安装
-agent-hub install my-role --project --to claude,cursor
-```
-
----
-
-## 工作原理
-
-Agent Hub 的核心工作流程分为三个阶段：
-
-### 阶段 1：平台检测
-
-```
-agent-hub detect
-    ↓
-扫描本地目录，检测哪些 Agent 平台已安装
-    ↓
-输出已检测平台列表
-```
-
-检测方式为目录探测 — 检查每个平台对应的目录（如 `~/.claude/skills`）是否存在。
-
-### 阶段 2：角色安装
-
-```
-agent-hub install pm --project
-    ↓
-读取 roles/pm/SKILL.md + rules/ + agents/
-    ↓
-复制到所有已检测平台的正确目录：
-  → .reasonix/skills/pm/SKILL.md
-  → .qoder/skills/pm/SKILL.md
-  → .claude/skills/pm/SKILL.md
-  → .cursor/skills/pm/SKILL.md
-  → ...（其他平台）
-同时复制 .shared/rules/ 中的共享规则
-```
-
-### 阶段 3：角色使用
-
-```
-用户在 Agent 中新建会话
-    ↓
-Agent 读取对应目录下的 SKILL.md
-    ↓
-加载角色人设 + 共享规则 + 专属规则
-    ↓
-以该角色身份和能力与用户交互
-```
-
----
-
-## 多平台支持
-
-### Linux
-
-开箱即用，无需额外配置。支持所有主流发行版（Ubuntu、Debian、CentOS、Fedora、Arch 等）。
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/phper666/agent-hub/main/install.sh | bash
-```
-
-### macOS
-
-完全支持 Intel 和 Apple Silicon 芯片。Shell 配置文件自动适配：
-
-- **bash** → `~/.bash_profile`
-- **zsh** → `~/.zshrc`（macOS 默认 shell）
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/phper666/agent-hub/main/install.sh | bash
-```
-
-### Windows
-
-推荐按优先级选择以下方案：
-
-#### 方案一：Git Bash（推荐）
-
-1. 下载安装 [Git for Windows](https://gitforwindows.org)
-2. 打开 Git Bash 终端
-3. 运行一键安装命令：
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/phper666/agent-hub/main/install.sh | bash
-```
-
-4. 重启 Git Bash 使 PATH 生效
-
-#### 方案二：WSL（推荐）
-
-1. 启用 WSL：
-
-```powershell
-wsl --install
-```
-
-2. 安装 Ubuntu 发行版：
-
-```powershell
-wsl --install -d Ubuntu
-```
-
-3. 在 WSL 终端中运行安装命令：
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/phper666/agent-hub/main/install.sh | bash
-```
-
-4. 使 PATH 生效：
-
-```bash
-source ~/.bashrc
-```
-
-#### 方案三：原生 Windows（有限支持）
-
-原生 Windows 环境（CMD / PowerShell）需要：
-
-1. 手动将 `$HOME/.local/bin` 添加到系统 PATH
-2. 可能遇到路径分隔符和换行符兼容问题
-3. 推荐改用 Git Bash 或 WSL 以获得最佳体验
+| 文档 | 内容 |
+|------|------|
+| [全部命令](docs/commands.md) | CLI 完整参考 |
+| [内置角色](docs/roles.md) | 8 个角色 + 6 个共享规则 + DAG 流水线 |
+| [集成项目](docs/integrations.md) | 16+ 个开源项目集成详情 |
+| [项目结构](docs/project-structure.md) | 目录树 |
+| [创建自定义角色](docs/custom-roles.md) | role create + SKILL.md 模板 |
+| [工作原理](docs/how-it-works.md) | 检测→安装→使用三阶段 |
+| [安装指南](docs/installation.md) | Linux / macOS / Windows |
+| [流水线](docs/pipeline.md) | DAG 依赖、协同工作流、选择性加载 |
+| [PR Review Actions](docs/github-actions/pr-review.yml.md) | GitHub Actions 配置模板 |
 
 ---
 
 ## 免责声明
 
-### 1. 集成项目免责声明
+Agent Hub 集成多个第三方开源项目。这些项目的版权归原作者所有。
 
-Agent Hub 集成了多个第三方开源项目。这些项目的版权归原作者所有，Agent Hub 仅作为集成和使用的工具，不对集成项目的功能、安全性或准确性做任何保证。
-
-| 项目 | 版权所有 | 许可证 | 项目地址 |
-|------|---------|--------|---------|
-| markitdown | Microsoft Corporation | MIT License | https://github.com/microsoft/markitdown |
-| superpowers | obra / jnMetaCode | MIT License | https://github.com/jnMetaCode/superpowers-zh |
-| ECC | affaan-m | MIT License | https://github.com/affaan-m/ECC |
-| taste-skill | Leonxlnx | MIT License | https://github.com/Leonxlnx/taste-skill |
-| headroom | chopratejas | Apache-2.0 License | https://github.com/chopratejas/headroom |
-| harness | revfactory | Apache-2.0 License | https://github.com/revfactory/harness |
-| supermemory | supermemoryai | MIT License | https://github.com/supermemoryai/supermemory |
-
-### 2. 使用免责声明
-
-1. **按原样提供**：Agent Hub 及其集成的项目按"原样"提供，不作任何明示或暗示的保证。
-2. **风险自担**：使用 Agent Hub 及其集成项目的风险由用户自行承担。
-3. **不保证兼容性**：Agent Hub 不保证与所有 AI Agent 平台的完全兼容性。
-4. **不保证输出质量**：Agent Hub 不保证使用集成项目后 AI 输出的质量或准确性。
-5. **不承担损失**：Agent Hub 的作者和贡献者不对因使用本项目而产生的任何直接、间接、偶然、特殊或后果性损失承担责任。
-6. **第三方项目**：Agent Hub 集成的第三方项目有其自己的许可和使用条款，用户应自行遵守。
-7. **API 密钥安全**：用户应妥善保管自己的 API 密钥，Agent Hub 不对密钥泄露造成的损失负责。
-8. **数据隐私**：Agent Hub 本身不收集或存储用户数据，但集成的第三方项目可能有自己的数据收集政策。
-
-### 3. 贡献者免责声明
-
-Agent Hub 的贡献者不对以下情况负责：
-
-1. 因使用本项目而产生的任何损失
-2. 因修改本项目而产生的问题
-3. 因集成第三方项目而产生的兼容性问题
-4. 因 AI 输出不准确而产生的决策错误
-
-### 4. 许可证
-
-Agent Hub 采用 [MIT License](LICENSE) 许可证。
-
-MIT License 允许用户自由使用、复制、修改、合并、发布、分发、再许可和/或出售本软件的副本，并允许被提供软件的人这样做，但须满足以下条件：
-
-上述版权声明和本许可声明应包含在本软件的所有副本或重要部分中。
-
-本软件按"原样"提供，不作任何明示或暗示的保证，包括但不限于对适销性、特定用途的适用性和不侵权的保证。在任何情况下，作者或版权持有人均不对因本软件或本软件的使用或其他交易而产生的任何索赔、损害或其他责任负责，无论是在合同诉讼、侵权诉讼或其他诉讼中。
+Agent Hub 采用 [MIT License](LICENSE)。按"原样"提供，不提供任何明示或暗示的保证。
 
 ---
 
 ## 致谢
 
-- [markitdown](https://github.com/microsoft/markitdown) — 微软出品的文档文本提取工具
-- [superpowers](https://github.com/jnMetaCode/superpowers-zh) — AI 编程工作流方法论（159k+ stars）
-- [ECC](https://github.com/affaan-m/ECC) — 高质量编码规范集合
-- [taste-skill](https://github.com/Leonxlnx/taste-skill) — AI UI 品位规范
-- [headroom](https://github.com/chopratejas/headroom) — Token 优化输出规范
-- [harness](https://github.com/revfactory/harness) — AI Agent 团队编排框架
-- [supermemory](https://github.com/supermemoryai/supermemory) — AI 记忆管理方案
+- [markitdown](https://github.com/microsoft/markitdown) · [superpowers](https://github.com/jnMetaCode/superpowers-zh) · [ECC](https://github.com/affaan-m/ECC) · [taste-skill](https://github.com/Leonxlnx/taste-skill) · [headroom](https://github.com/chopratejas/headroom) · [harness](https://github.com/revfactory/harness) · [supermemory](https://github.com/supermemoryai/supermemory) · [spec-kit](https://github.com/github/spec-kit) · [agency-agents](https://github.com/msitarzewski/agency-agents) · [open-code-review](https://github.com/alibaba/open-code-review) · [pr-agent](https://github.com/The-PR-Agent/pr-agent) · [CodeGraph](https://github.com/colbymchenry/codegraph) · [code-review-graph](https://github.com/tirth8205/code-review-graph)
 
 ---
 
 ## 联系方式
-
-如有问题或建议，请通过以下方式联系：
 
 - **GitHub Issues**: https://github.com/phper666/agent-hub/issues
 - **GitHub Discussions**: https://github.com/phper666/agent-hub/discussions

@@ -15,16 +15,20 @@ Your technical depth is provided by domain experts — load them context-depende
 2. `.shared/rules/quality-rules.md` — Quality standards
 3. `.shared/rules/security-rules.md` — Security standards
 4. `.shared/rules/output-rules.md` — Concise output (headroom)
-5. `.shared/rules/code-review-rules.md` — Code review (open-code-review)
-6. `.shared/rules/code-standards.md` — Coding standards (ECC)
-7. `.shared/skills/spec-driven-development/` — Spec-driven development (spec-kit)
-8. `.shared/skills/memory-guide.md` — Memory management (supermemory)
-9. `skills/test-driven-development/` — TDD
-10. `skills/subagent-driven-development/` — Subagent-driven development
-11. `skills/systematic-debugging/` — Systematic debugging
-12. `skills/pr-review/` — PR review (pr-agent)
-13. `skills/collaborative-review/` — Multi-agent collaborative review
-14. This file
+5. `.shared/rules/code-standards.md` — Coding standards (ECC)
+6. `.shared/skills/spec-driven-development/references/spec-phases.md` — Spec phases (spec-kit)
+7. `.shared/skills/memory-guide/` — Memory management (supermemory)
+8. `.shared/skills/test-driven-development/` — TDD
+9. `.shared/skills/subagent-driven-development/` — Subagent-driven development
+10. `.shared/skills/systematic-debugging/` — Systematic debugging
+11. `.shared/skills/code-intelligence/` — CodeGraph (Backend: daily use)
+12. This file
+
+> ⚡ **Lightweight Mode**: When the task is trivial (<3 files, no new API, no DB schema change):
+> Skip items 8-10 (tdd, subagent, debugging).
+> Only load items 1-7 + 11-12. Say "Lightweight mode — skipping dev-methodology skills for this small change."
+>
+> 🔀 **PR review is NOT loaded here** — pr-review + collaborative-review + code-review-rules run on demand (see Expert Selection Guide or GitHub Actions).
 
 ## Expert Selection Guide (Context-Dependent)
 
@@ -36,8 +40,11 @@ Only load experts relevant to your CURRENT task. Default: 1 expert.
 | Database, queries, schema, migrations | Database Optimizer | `agents/agency/database-optimizer-expert.md` |
 | CI/CD, deployment, infrastructure | DevOps Automator | `agents/agency/devops-automator-expert.md` |
 | Reliability, monitoring, SLOs, incidents | SRE Engineer | `agents/agency/sre-engineer-expert.md` |
-| Prompt optimization, LLM interaction | Prompt Engineer | `.shared/skills/prompt-engineering.md` |
-| Post-implementation quality gate | Global Consistency Review | `.shared/skills/global-consistency-review.md` |
+| Prompt optimization, LLM interaction | Prompt Engineer | `.shared/skills/prompt-engineering/` |
+| Post-implementation quality gate | Global Consistency Review | `.shared/skills/global-consistency-review/` |
+| Code dependency analysis, call tracing | Code Intelligence (CodeGraph) | `.shared/skills/code-intelligence/` |
+| Code review, PR review | Code Review Rules | `.shared/rules/code-review-rules.md` |
+| Spec-driven planning, API spec, architecture plan | Spec-Driven Dev (full) | `.shared/skills/spec-driven-development/` |
 
 **Selection rule**: For multi-domain tasks, combine relevant experts. Max 3 at once.
 
@@ -73,6 +80,43 @@ Before starting, read `docs/current/status.md`:
 ### Step 2: Database Design → `docs/current/architecture/db-schema.md`
 ### Step 3: TDD Each Endpoint → 1.Write test→2.Run(RED)→3.Implement(GREEN)→4.Refactor→5.Review→6.Commit
 ### Step 4: Update Status → each endpoint done → status.md; all done → "✅ Done"
+
+### Step 5: Self-Evaluation (Optional)
+After task completion, write a brief self-evaluation to `docs/current/feedback/backend-self-eval.md`:
+
+```markdown
+# Backend Self-Evaluation — {Task} — {Date}
+
+## What Worked Well
+- [List rules/skills/experts that helped]
+
+## What Could Improve
+- [List rules that didn't apply well]
+- [List expert knowledge gaps]
+- [List workflow friction points]
+
+## Suggestions
+- [Concrete suggestions for role/SKILL.md improvement]
+```
+
+## Team Communication Protocol
+
+| Situation | Action |
+|-----------|--------|
+| **Blocked** | Update `docs/current/status.md` with ❌ Blocked and reason |
+| **Upstream output has issues** | Write findings to `docs/current/feedback/backend-feedback.md` |
+| **Task complete** | Update `docs/current/status.md` with ✅ Done and output path |
+| **Inter-role handoff** | Check `docs/current/feedback/` before starting for known issues |
+
+## Error Handling
+
+| Exception | Handling |
+|-----------|----------|
+| **Required input file missing** | ❌ Stop and report: "Missing [file], waiting for [upstream role]" |
+| **Input file present but empty** | ⚠️ Stop and report: "[file] is empty, check with [upstream role]" |
+| **Input in unexpected format** | Try to parse; if fails, report and ask for clarification |
+| **Tool/API failure** (markitdown, etc.) | Retry once; if still fails, proceed with available data and note the gap |
+| **Timeout during task** | Save partial output, mark status as ⚠️ Partial |
 
 ## What You Do NOT Do
 - No frontend implementation
