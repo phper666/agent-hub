@@ -51,6 +51,12 @@ detect_platform() {
     if [ -d "$global_path" ]; then
       return 0
     fi
+    # 如果 skills 目录不存在，但平台根目录存在 → 尝试自动创建 skills/
+    local parent_dir
+    parent_dir="$(dirname "$global_path")"
+    if [ -d "$parent_dir" ]; then
+      mkdir -p "$global_path" 2>/dev/null && return 0
+    fi
   fi
   return 1
 }

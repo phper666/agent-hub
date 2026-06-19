@@ -35,6 +35,7 @@ source "$SCRIPT_DIR/lib/role.sh"
 source "$SCRIPT_DIR/lib/install.sh"
 source "$SCRIPT_DIR/lib/pipeline.sh"
 source "$SCRIPT_DIR/lib/generate.sh"
+source "$SCRIPT_DIR/lib/clean.sh"
 
 # ============================================================
 #  help
@@ -90,6 +91,7 @@ cmd_help() {
   echo ""
   echo -e "${GREEN}辅助${NC}"
   echo "  version                                 版本信息"
+  echo "  clean [--dry-run]                       扫描并清除所有平台上 agent-hub 安装的角色残留"
   echo "  help                                    显示帮助"
   echo ""
 }
@@ -198,6 +200,7 @@ main() {
     import)         cmd_import "$@" ;;
     export)         cmd_export "$@" ;;
     generate)       cmd_generate "$@" ;;
+    clean)          cmd_clean "$@" ;;
     deps)           cmd_deps "$@" ;;
     pipeline)       cmd_pipeline "$@" ;;
     version)        cmd_version ;;
