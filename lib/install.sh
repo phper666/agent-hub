@@ -51,6 +51,16 @@ install_role_to_platform() {
   safe_copy_dir "$AGENT_HUB_DIR/.shared/rules"  "$target_dir/.shared/rules"
   safe_copy_dir "$AGENT_HUB_DIR/.shared/skills" "$target_dir/.shared/skills"
 
+  # 写入 agent-hub 安装标记（用于 clean 命令识别）
+  cat > "$target_dir/.agent-hub-installed" << EOF
+installed_by: agent-hub
+version: ${VERSION:-unknown}
+role: $role_name
+platform: $platform
+mode: $mode
+installed_at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+EOF
+
   return 0
 }
 

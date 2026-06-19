@@ -11,6 +11,9 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+# Agent Hub 内置角色列表（所有版本的合集）
+KNOWN_BUILTIN_ROLES="architect backend delivery-director designer frontend pm qa router"
+
 # 日志函数
 info()  { echo -e "${BLUE}ℹ️  $1${NC}"; }
 ok()    { echo -e "${GREEN}✅ $1${NC}"; }
@@ -72,4 +75,28 @@ ensure_file() {
 get_version() {
   local script_dir="${1:-$AGENT_HUB_DIR}"
   cat "$script_dir/VERSION" 2>/dev/null | tr -d '[:space:]' || echo "unknown"
+}
+
+# 判断目录是否为 agent-hub 安装的角色
+# 检查 marker 文件或 .shared/ 子目录
+is_agent_hub_role() {
+  local dir="$1"
+  [ -f "$dir/.agent-hub-installed" ] && return 0
+  [ -d "$dir/.shared" ] && return 0
+  return 1
+}
+
+# 列出指定目录下所有 agent-hub 安装的角色子目录
+list_agent_hub_roles_in() {
+  local skills_dir="$1"
+  if [ ! -d "$skills_dir" ]; then
+    return
+  fi
+  for subdir in "$skills_dir"/*/; do
+    [ -d "$subdir" ] || continue
+    local name="$(basename "$subdir")"
+    if is_agent_hub_role "$subdir"; then
+      echo "$name"
+    fi
+  done
 }
